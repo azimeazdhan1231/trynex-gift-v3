@@ -1,0 +1,68 @@
+Your Complete Project Requirements:
+Initial Request:
+"Make the full website for me, i will manage database for supabase, backend for render, repository for github, and frontend for netlify and i will handle orders, promo codes, latest offers, new offers, popup ads, order status etc things i will manage from the admin panel"
+
+Database & Tech Stack:
+Database: PostgreSQL connection: postgresql://postgres.wifsqonbnfmwtqvupqbk:Amits@12345@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres
+Anon Key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX ...[Truncated]
+Tech Stack:
+Frontend: HTML + CSS + JS (React compiled to static files)
+Backend: Node.js + Express (Lightweight API)
+Database: Supabase (Free, secure, real-time PostgreSQL)
+Hosting: Netlify (Frontend) + Render (Backend)
+Design Reference:
+Reference website: https://trynex-lifestyle.netlify.app
+"use you own sense more to enhanced and then start working to fix all this things perfectly"
+"this will be a gift website and e commerce type"
+"A dedicated products page needed"
+Design Aesthetic:
+Color Scheme: Black background, Gold highlights, White text
+UI Style: Modern UI with parallax scroll effects, soft animations, hover transitions, and mobile-friendly design
+Language: Bangla + English mix for labels and prices (Bangla only for prices)
+Product Categories:
+Mugs – প্রিমিয়াম সিরামিক মগ — ৫৫০৳ থেকে
+T-Shirts – আরামদায়ক টি-শার্ট — 550৳ থেকে
+Keychains – স্টাইলিশ চাবির চেইন — 400৳ থেকে
+Water Bottles – ইকো-ফ্রেন্ডলি বোতল — ৮০০৳ থেকে
+Gift for Him – 🎁 স্পেশাল
+Gift for Her – 💝 এক্সক্লুসিভ
+Gift for Parents – ❤️ ভালোবাসা
+Gifts for Babies – 🍼 সেফ
+For Couple – 💑 রোমান্টিক
+Premium Luxury Gift Hampers – 🎁 লাক্সারি
+Chocolates & Flowers – 🍫🌹 রোমান্টিক
+Technical Requirements:
+"the mobile menu should only be for in mobile and full website should be very responsive and no overlapping"
+"the order should be working directly with unique id and the orders will be admin panel also"
+"the admin panel and all directories setup perfectly"
+"supabase connected needed, no fake or local data, it should be working in realtime data seamlessly"
+"repository in github to push the code"
+"make ultra modern with realistic features and realtime dynamic high end modern magical coded website type need"
+Custom Design Page:
+🎨 CUSTOM DESIGN PAGE (only includes customizable items):
+
+Printed Mug
+Water Tumbler
+T-Shirt
+Picture Frame
+Wallet
+Custom Letter
+Features:
+
+Upload JPG/PNG files
+HTML5 canvas live preview
+Drag, resize, rotate functionality
+Submit to Supabase Storage and save order
+"make sure the area of canvas or for the mockup and make sure perfectly working everything in any device with perfect decorations"
+Website Structure:
+4 main pages: Homepage, Products, Custom Design, Contact
+Admin Panel: "in the end of the site url if i write admin it should open the admin panel which will be dynamically created to manage all operations i wanted"
+Final Requirements:
+Real-time Supabase integration
+No fake or local data
+Ultra-modern magical UI
+Perfect mobile responsiveness
+GitHub repository integration
+Complete admin panel functionality
+Unique order ID system
+Real-time order management
