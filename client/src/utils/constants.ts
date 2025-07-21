@@ -1,59 +1,61 @@
+export const COMPANY_INFO = {
+  name: "TryneX Lifestyle",
+  nameBn: "ট্রাইনেক্স লাইফস্টাইল",
+  phone: "+8801940689487",
+  email: "trynex-lifestyle@gmail.com",
+  paymentNumber: "01747292277",
+  website: "https://trynex-lifestyle.netlify.app",
+  address: "Dhaka, Bangladesh",
+  addressBn: "ঢাকা, বাংলাদেশ"
+};
+
 export const CATEGORIES = [
-  { slug: 'mugs', name: 'Mugs', namebn: 'প্রিমিয়াম সিরামিক মগ', icon: '☕', priceFrom: '৳৫৫০' },
-  { slug: 'tshirts', name: 'T-Shirts', namebn: 'আরামদায়ক টি-শার্ট', icon: '👕', priceFrom: '৳৩৫০' },
-  { slug: 'keychains', name: 'Keychains', namebn: 'স্টাইলিশ চাবির চেইন', icon: '🔑', priceFrom: '৳৩০০' },
-  { slug: 'bottles', name: 'Water Bottles', namebn: 'ইকো-ফ্রেন্ডলি বোতল', icon: '🍼', priceFrom: '৮০০৳ থেকে' },
-  { slug: 'gift-for-him', name: 'Gift for Him', namebn: 'তার জন্য পারফেক্ট গিফট', icon: '🎁', priceFrom: '🎁 স্পেশাল' },
-  { slug: 'gift-for-her', name: 'Gift for Her', namebn: 'প্রিয়া মানুষের জন্য', icon: '💝', priceFrom: '💝 এক্সক্লুসিভ' },
-  { slug: 'gift-for-parents', name: 'Gift for Parents', namebn: 'মা-বাবার জন্য বিশেষ', icon: '❤️', priceFrom: '❤️ ভালোবাসা' },
-  { slug: 'gifts-for-babies', name: 'Gifts for Babies', namebn: 'শিশুদের জন্য নিরাপদ', icon: '👶', priceFrom: '🍼 সেফ' },
-  { slug: 'for-couple', name: 'For Couple', namebn: 'কাপলদের জন্য স্পেশাল', icon: '💑', priceFrom: '💑 রোমান্টিক' },
-  { slug: 'premium-luxury-gift-hampers', name: 'Premium Luxury Gift Hampers', namebn: 'প্রিমিয়াম লাক্সারি গিফট হ্যাম্পার', icon: '🎀', priceFrom: '🎁 লাক্সারি' },
-  { slug: 'chocolates-flowers', name: 'Chocolates & Flowers', namebn: 'চকলেট ও ফুলের সংগ্রহ', icon: '🍫🌹', priceFrom: '🍫🌹 রোমান্টিক' },
+  { name: "T-Shirts", namebn: "টি-শার্ট", slug: "t-shirts", icon: "👕" },
+  { name: "Mugs", namebn: "মগ", slug: "mugs", icon: "☕" },
+  { name: "Bags", namebn: "ব্যাগ", slug: "bags", icon: "👜" },
+  { name: "Caps & Hats", namebn: "ক্যাপ ও হ্যাট", slug: "caps-hats", icon: "🧢" },
+  { name: "Phone Cases", namebn: "ফোন কেস", slug: "phone-cases", icon: "📱" },
+  { name: "Canvas Prints", namebn: "ক্যানভাস প্রিন্ট", slug: "canvas-prints", icon: "🖼️" },
 ];
 
 export const CUSTOMIZABLE_PRODUCTS = [
-  'Printed Mug',
-  'Water Tumbler',
-  'T-Shirt',
-  'Picture Frame',
-  'Wallet',
-  'Custom Letter'
+  "T-Shirts", "Mugs", "Bags", "Caps & Hats", "Phone Cases", "Canvas Prints"
 ];
 
 export const PAYMENT_METHODS = [
-  { id: 'bkash', name: 'bKash', number: '01747292277' },
-  { id: 'nagad', name: 'Nagad', number: '01747292277' },
-  { id: 'upay', name: 'Upay', number: '01747292277' },
+  { id: "bkash", name: "bKash", namebn: "বিকাশ", icon: "📱" },
+  { id: "nagad", name: "Nagad", namebn: "নগদ", icon: "💰" },
+  { id: "upay", name: "Upay", namebn: "উপায়", icon: "💳" },
+  { id: "cod", name: "Cash on Delivery", namebn: "ক্যাশ অন ডেলিভারি", icon: "💵" },
 ];
 
 export const DISTRICTS = [
-  'ঢাকা', 'চট্টগ্রাম', 'রাজশাহী', 'খুলনা', 'সিলেট', 'বরিশাল', 'রংপুর', 'ময়মনসিংহ',
-  'গাজীপুর', 'নারায়ণগঞ্জ', 'কুমিল্লা', 'ফরিদপুর', 'কিশোরগঞ্জ', 'মাদারীপুর', 'গোপালগঞ্জ',
-  'শরীয়তপুর', 'রাজবাড়ী', 'মানিকগঞ্জ', 'টাঙ্গাইল', 'জামালপুর', 'নেত্রকোনা', 'শেরপুর'
+  "Dhaka", "Chittagong", "Sylhet", "Rajshahi", "Khulna", "Barisal", "Rangpur", "Mymensingh"
 ];
+
+export const DELIVERY_FEE = 120;
 
 export const ORDER_STATUSES = [
-  'pending',
-  'confirmed',
-  'processing',
-  'shipped',
-  'delivered',
-  'cancelled'
+  { value: "pending", label: "Pending", labelBn: "অপেক্ষমান", color: "bg-yellow-500" },
+  { value: "confirmed", label: "Confirmed", labelBn: "নিশ্চিত", color: "bg-blue-500" },
+  { value: "processing", label: "Processing", labelBn: "প্রক্রিয়াকরণ", color: "bg-purple-500" },
+  { value: "shipped", label: "Shipped", labelBn: "পাঠানো হয়েছে", color: "bg-indigo-500" },
+  { value: "delivered", label: "Delivered", labelBn: "ডেলিভার", color: "bg-green-500" },
+  { value: "cancelled", label: "Cancelled", labelBn: "বাতিল", color: "bg-red-500" },
 ];
 
-export const PAYMENT_STATUSES = [
-  'pending',
-  'paid',
-  'failed',
-  'refunded'
-];
-
-export const COMPANY_INFO = {
-  name: 'TryneX Lifestyle',
-  phone: '+8801940689487',
-  whatsapp: '8801940689487',
-  email: 'trynex-lifestyle@gmail.com',
-  address: 'Dhaka, Bangladesh',
-  paymentNumber: '01747292277'
+export const DELIVERY_ZONES = {
+  dhaka: { fee: 70, freeAbove: 1500 },
+  outside: { fee: 120, freeAbove: 1500 }
 };
+
+export const CUSTOMIZABLE_PRODUCTS = [
+  "T-Shirt",
+  "Hoodie", 
+  "Coffee Mug",
+  "Canvas Print",
+  "Phone Case",
+  "Notebook",
+  "Pillow",
+  "Water Bottle"
+];

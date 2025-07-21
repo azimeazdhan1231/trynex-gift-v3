@@ -1,11 +1,13 @@
+
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Upload, RotateCw, Move, Type, Image as ImageIcon, Save, Download } from "lucide-react";
+import { Upload, RotateCw, Move, Type, Image as ImageIcon, Save, Download, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { useCart } from "@/hooks/useCart";
 
 interface DesignElement {
   id: string;
@@ -35,15 +37,191 @@ export const CanvasEditor = ({ productId, productName, onSave }: CanvasEditorPro
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [textInput, setTextInput] = useState("");
-  const [isResizing, setIsResizing] = useState(false);
+  const [savedDesign, setSavedDesign] = useState<any>(null);
+  const [canvasSize, setCanvasSize] = useState({ width: 300, height: 300 });
   const { toast } = useToast();
+  const { addItem } = useCart();
 
-  const canvasWidth = 400;
-  const canvasHeight = 400;
+  // Responsive canvas sizing
+  useEffect(() => {
+    const updateCanvasSize = () => {
+      const screenWidth = window.innerWidth;
+      if (screenWidth < 640) {
+        setCanvasSize({ width: 280, height: 280 });
+      } else if (screenWidth < 768) {
+        setCanvasSize({ width: 320, height: 320 });
+      } else {
+        setCanvasSize({ width: 400, height: 400 });
+      }
+    };
+
+    updateCanvasSize();
+    window.addEventListener('resize', updateCanvasSize);
+    return () => window.removeEventListener('resize', updateCanvasSize);
+  }, []);
 
   useEffect(() => {
     drawCanvas();
-  }, [elements, selectedElement]);
+  }, [elements, selectedElement, canvasSize]);
+
+  const getProductMockup = () => {
+    const productLower = productName.toLowerCase();
+    if (productLower.includes('mug') || productLower.includes('coffee')) {
+      return 'mug';
+    } else if (productLower.includes('tumbler') || productLower.includes('water')) {
+      return 'tumbler';
+    } else if (productLower.includes('shirt') || productLower.includes('t-shirt')) {
+      return 'tshirt';
+    } else if (productLower.includes('frame') || productLower.includes('picture')) {
+      return 'frame';
+    } else if (productLower.includes('wallet')) {
+      return 'wallet';
+    }
+    return 'generic';
+  };
+
+  const drawProductMockup = (ctx: CanvasRenderingContext2D) => {
+    const mockupType = getProductMockup();
+    const { width, height } = canvasSize;
+    
+    // Clear background
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillRect(0, 0, width, height);
+
+    // Define design area (where custom content goes)
+    const designArea = {
+      x: width * 0.25,
+      y: height * 0.25,
+      width: width * 0.5,
+      height: height * 0.5
+    };
+
+    switch (mockupType) {
+      case 'mug':
+        // Draw mug outline
+        ctx.strokeStyle = '#e2e8f0';
+        ctx.lineWidth = 3;
+        ctx.fillStyle = '#ffffff';
+        
+        // Mug body
+        ctx.beginPath();
+        ctx.roundRect(width * 0.2, height * 0.15, width * 0.6, height * 0.7, 20);
+        ctx.fill();
+        ctx.stroke();
+        
+        // Mug handle
+        ctx.beginPath();
+        ctx.arc(width * 0.85, height * 0.4, 25, Math.PI * 0.3, Math.PI * 1.7, false);
+        ctx.stroke();
+        
+        // Design area highlight
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.strokeRect(designArea.x, designArea.y, designArea.width, designArea.height);
+        ctx.setLineDash([]);
+        break;
+
+      case 'tumbler':
+        // Draw tumbler outline
+        ctx.strokeStyle = '#e2e8f0';
+        ctx.lineWidth = 3;
+        ctx.fillStyle = '#ffffff';
+        
+        // Tumbler body (cylindrical)
+        ctx.beginPath();
+        ctx.roundRect(width * 0.3, height * 0.1, width * 0.4, height * 0.8, 15);
+        ctx.fill();
+        ctx.stroke();
+        
+        // Cap
+        ctx.beginPath();
+        ctx.roundRect(width * 0.28, height * 0.08, width * 0.44, height * 0.08, 8);
+        ctx.fill();
+        ctx.stroke();
+        
+        // Design area
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.strokeRect(designArea.x, designArea.y, designArea.width, designArea.height);
+        ctx.setLineDash([]);
+        break;
+
+      case 'tshirt':
+        // Draw t-shirt outline
+        ctx.strokeStyle = '#e2e8f0';
+        ctx.lineWidth = 3;
+        ctx.fillStyle = '#ffffff';
+        
+        // T-shirt body
+        ctx.beginPath();
+        ctx.roundRect(width * 0.15, height * 0.25, width * 0.7, height * 0.65, 20);
+        ctx.fill();
+        ctx.stroke();
+        
+        // Sleeves
+        ctx.beginPath();
+        ctx.roundRect(width * 0.05, height * 0.2, width * 0.15, height * 0.3, 10);
+        ctx.fill();
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.roundRect(width * 0.8, height * 0.2, width * 0.15, height * 0.3, 10);
+        ctx.fill();
+        ctx.stroke();
+        
+        // Neck
+        ctx.beginPath();
+        ctx.arc(width * 0.5, height * 0.25, width * 0.08, 0, Math.PI, false);
+        ctx.stroke();
+        
+        // Design area
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.strokeRect(width * 0.35, height * 0.4, width * 0.3, height * 0.25);
+        ctx.setLineDash([]);
+        break;
+
+      case 'frame':
+        // Draw picture frame
+        ctx.strokeStyle = '#8b5cf6';
+        ctx.lineWidth = 8;
+        ctx.fillStyle = '#ffffff';
+        
+        // Frame border
+        ctx.strokeRect(width * 0.1, height * 0.1, width * 0.8, height * 0.8);
+        ctx.fillRect(width * 0.15, height * 0.15, width * 0.7, height * 0.7);
+        
+        // Design area (inner frame)
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.strokeRect(width * 0.2, height * 0.2, width * 0.6, height * 0.6);
+        ctx.setLineDash([]);
+        break;
+
+      default:
+        // Generic product
+        ctx.strokeStyle = '#e2e8f0';
+        ctx.lineWidth = 3;
+        ctx.fillStyle = '#ffffff';
+        ctx.roundRect(width * 0.1, height * 0.1, width * 0.8, height * 0.8, 15);
+        ctx.fill();
+        ctx.stroke();
+        
+        // Design area
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.strokeRect(designArea.x, designArea.y, designArea.width, designArea.height);
+        ctx.setLineDash([]);
+        break;
+    }
+
+    return designArea;
+  };
 
   const drawCanvas = () => {
     const canvas = canvasRef.current;
@@ -52,42 +230,38 @@ export const CanvasEditor = ({ productId, productName, onSave }: CanvasEditorPro
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Clear canvas
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    // Set canvas size
+    canvas.width = canvasSize.width;
+    canvas.height = canvasSize.height;
 
-    // Draw product mockup background
-    ctx.fillStyle = '#f3f4f6';
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-    
-    // Add mockup outline
-    ctx.strokeStyle = '#d1d5db';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(50, 50, canvasWidth - 100, canvasHeight - 100);
+    // Draw product mockup and get design area
+    const designArea = drawProductMockup(ctx);
 
-    // Draw elements
+    // Draw elements within design area
     elements.forEach(element => {
       ctx.save();
       
+      // Constrain elements to design area
+      const constrainedX = Math.max(designArea.x, Math.min(designArea.x + designArea.width - element.width, element.x));
+      const constrainedY = Math.max(designArea.y, Math.min(designArea.y + designArea.height - element.height, element.y));
+      
       // Apply transformations
-      ctx.translate(element.x + element.width / 2, element.y + element.height / 2);
+      ctx.translate(constrainedX + element.width / 2, constrainedY + element.height / 2);
       ctx.rotate(element.rotation * Math.PI / 180);
       ctx.translate(-element.width / 2, -element.height / 2);
 
       if (element.type === 'text' && element.content) {
         ctx.fillStyle = element.color || '#000000';
         ctx.font = `${element.fontSize || 16}px ${element.fontFamily || 'Arial'}`;
-        ctx.fillText(element.content, 0, element.height / 2);
-      } else if (element.type === 'image' && element.imageUrl) {
-        // For demo purposes, draw a placeholder
-        ctx.fillStyle = '#e5e7eb';
-        ctx.fillRect(0, 0, element.width, element.height);
-        ctx.strokeStyle = '#9ca3af';
-        ctx.strokeRect(0, 0, element.width, element.height);
-        
-        ctx.fillStyle = '#6b7280';
-        ctx.font = '14px Arial';
         ctx.textAlign = 'center';
-        ctx.fillText('Image', element.width / 2, element.height / 2);
+        ctx.fillText(element.content, element.width / 2, element.height / 2);
+      } else if (element.type === 'image' && element.imageUrl) {
+        // Draw uploaded image
+        const img = new Image();
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0, element.width, element.height);
+        };
+        img.src = element.imageUrl;
       }
 
       // Draw selection outline
@@ -114,8 +288,10 @@ export const CanvasEditor = ({ productId, productName, onSave }: CanvasEditorPro
     if (!canvas) return;
 
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
 
     // Check if clicking on an element
     let clickedElement: DesignElement | null = null;
@@ -156,15 +332,17 @@ export const CanvasEditor = ({ productId, productName, onSave }: CanvasEditorPro
     if (!canvas) return;
 
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
 
     setElements(prev => prev.map(element => 
       element.id === selectedElement
         ? {
             ...element,
-            x: Math.max(0, Math.min(canvasWidth - element.width, x - dragOffset.x)),
-            y: Math.max(0, Math.min(canvasHeight - element.height, y - dragOffset.y))
+            x: Math.max(canvasSize.width * 0.25, Math.min(canvasSize.width * 0.75 - element.width, x - dragOffset.x)),
+            y: Math.max(canvasSize.height * 0.25, Math.min(canvasSize.height * 0.75 - element.height, y - dragOffset.y))
           }
         : element
     ));
@@ -180,13 +358,13 @@ export const CanvasEditor = ({ productId, productName, onSave }: CanvasEditorPro
     const newElement: DesignElement = {
       id: Date.now().toString(),
       type: 'text',
-      x: 100,
-      y: 100,
-      width: 200,
+      x: canvasSize.width * 0.35,
+      y: canvasSize.height * 0.4,
+      width: 100,
       height: 30,
       rotation: 0,
       content: textInput,
-      fontSize: 18,
+      fontSize: 16,
       color: '#000000',
       fontFamily: 'Arial'
     };
@@ -205,10 +383,10 @@ export const CanvasEditor = ({ productId, productName, onSave }: CanvasEditorPro
     const newElement: DesignElement = {
       id: Date.now().toString(),
       type: 'image',
-      x: 120,
-      y: 120,
-      width: 160,
-      height: 160,
+      x: canvasSize.width * 0.3,
+      y: canvasSize.height * 0.35,
+      width: 80,
+      height: 80,
       rotation: 0,
       imageUrl
     };
@@ -269,16 +447,51 @@ export const CanvasEditor = ({ productId, productName, onSave }: CanvasEditorPro
     const designData = {
       elements,
       canvas: {
-        width: canvasWidth,
-        height: canvasHeight
-      }
+        width: canvasSize.width,
+        height: canvasSize.height
+      },
+      productName,
+      productId
     };
 
+    setSavedDesign(designData);
     onSave?.(designData);
 
     toast({
       title: "Design Saved",
       description: "Your custom design has been saved successfully.",
+    });
+  };
+
+  const addToCart = () => {
+    if (!savedDesign) {
+      toast({
+        title: "Save Design First",
+        description: "Please save your design before adding to cart.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const customProduct = {
+      id: `custom-${Date.now()}`,
+      name: `Custom ${productName}`,
+      namebn: `কাস্টম ${productName}`,
+      price: 299,
+      pricebn: "২৯৯",
+      description: "Custom designed product with your personal touch",
+      descriptionbn: "আপনার ব্যক্তিগত ছোঁয়া সহ কাস্টম ডিজাইন পণ্য",
+      image: canvasRef.current?.toDataURL() || "/placeholder.jpg",
+      category: "Custom",
+      inStock: true,
+      customDesign: savedDesign
+    };
+
+    addItem(customProduct);
+
+    toast({
+      title: "Added to Cart!",
+      description: "Your custom product has been added to cart.",
     });
   };
 
@@ -309,12 +522,12 @@ export const CanvasEditor = ({ productId, productName, onSave }: CanvasEditorPro
             </p>
           </CardHeader>
           <CardContent>
-            <div className="bg-white rounded-lg p-4 inline-block">
+            <div className="bg-white rounded-lg p-4 inline-block max-w-full overflow-auto">
               <canvas
                 ref={canvasRef}
-                width={canvasWidth}
-                height={canvasHeight}
-                className="border border-gray-300 cursor-pointer"
+                width={canvasSize.width}
+                height={canvasSize.height}
+                className="border border-gray-300 cursor-pointer max-w-full h-auto"
                 onClick={handleCanvasClick}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
@@ -418,6 +631,14 @@ export const CanvasEditor = ({ productId, productName, onSave }: CanvasEditorPro
             >
               <Save className="h-4 w-4 mr-2" />
               Save Design
+            </Button>
+            <Button
+              onClick={addToCart}
+              disabled={!savedDesign}
+              className="w-full bg-gold hover:bg-gold/90 text-black"
+            >
+              <ShoppingCart className="h-4 w-4 mr-2" />
+              Add to Cart
             </Button>
             <Button
               onClick={downloadPreview}

@@ -15,7 +15,7 @@ export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [sortBy, setSortBy] = useState("newest");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [viewMode, setViewMode<"grid" | "list">("grid");
   const [debouncedSearch, setDebouncedSearch] = useState("");
 
   const { data: products = [], isLoading } = useProducts({
@@ -39,7 +39,7 @@ export default function ProductsPage() {
     const urlParams = new URLSearchParams(window.location.search);
     const category = urlParams.get('category');
     const search = urlParams.get('search');
-    
+
     if (category) setSelectedCategory(category);
     if (search) setSearchQuery(search);
   }, []);
@@ -101,12 +101,12 @@ export default function ProductsPage() {
             </div>
 
             {/* Category Filter */}
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <Select value={selectedCategory || ""} onValueChange={setSelectedCategory}>
               <SelectTrigger className="bg-black/50 border-gold/30 text-white">
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Categories</SelectItem>
+                <SelectItem value="all">All Categories</SelectItem>
                 {CATEGORIES.map((category) => (
                   <SelectItem key={category.slug} value={category.slug}>
                     {category.icon} {category.name}
@@ -173,7 +173,7 @@ export default function ProductsPage() {
               </span>
             )}
           </p>
-          
+
           <div className="flex items-center gap-2 text-sm text-gray-400">
             <SortAsc className="h-4 w-4" />
             <span>

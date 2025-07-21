@@ -358,6 +358,7 @@ export default function CheckoutPage() {
                         <SelectValue placeholder="জেলা বেছে নিন" />
                       </SelectTrigger>
                       <SelectContent>
+                        <SelectItem value="select-district">জেলা নির্বাচন করুন</SelectItem>
                         {DISTRICTS.map((district) => (
                           <SelectItem key={district} value={district}>
                             {district}
