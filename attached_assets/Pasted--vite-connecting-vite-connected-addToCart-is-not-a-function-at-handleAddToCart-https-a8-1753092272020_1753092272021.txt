@@ -1,0 +1,25 @@
+[vite] connecting...
+[vite] connected.
+addToCart is not a function
+at handleAddToCart (https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/src/components/ui/ProductCard.tsx:30:5)
+at HTMLUnknownElement.callCallback2 (https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UPELNCPK.js?v=3b026473:3674:22)
+at Object.invokeGuardedCallbackDev (https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UPELNCPK.js?v=3b026473:3699:24)
+at invokeGuardedCallback (https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UPELNCPK.js?v=3b026473:3733:39)
+at invokeGuardedCallbackAndCatchFirstError (https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UPELNCPK.js?v=3b026473:3736:33)
+at executeDispatch (https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UPELNCPK.js?v=3b026473:7014:11)
+at processDispatchQueueItemsInOrder (https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UPELNCPK.js?v=3b026473:7034:15)
+at processDispatchQueue (https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UPELNCPK.js?v=3b026473:7043:13)
+at dispatchEventsForPlugins (https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UPELNCPK.js?v=3b026473:7051:11)
+at https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UPELNCPK.js?v=3b026473:7174:20
+addToCart is not a function
+at handleAddToCart (https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/src/components/ui/ProductCard.tsx:30:5)
+at HTMLUnknownElement.callCallback2 (https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UPELNCPK.js?v=3b026473:3674:22)
+at Object.invokeGuardedCallbackDev (https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UPELNCPK.js?v=3b026473:3699:24)
+at invokeGuardedCallback (https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UPELNCPK.js?v=3b026473:3733:39)
+at invokeGuardedCallbackAndCatchFirstError (https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UPELNCPK.js?v=3b026473:3736:33)
+at executeDispatch (https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UPELNCPK.js?v=3b026473:7014:11)
+at processDispatchQueueItemsInOrder (https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UPELNCPK.js?v=3b026473:7034:15)
+at processDispatchQueue (https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UPELNCPK.js?v=3b026473:7043:13)
+at dispatchEventsForPlugins (https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UPELNCPK.js?v=3b026473:7051:11)
+at https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-UPELNCPK.js?v=3b026473:7174:20
+
