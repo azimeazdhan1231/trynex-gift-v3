@@ -3,6 +3,37 @@
 @tailwind utilities;
 
 :root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: hsl(0, 84.2%, 60.2%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(60, 4.8%, 95.9%);
+  --secondary-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(60, 4.8%, 95.9%);
+  --accent-foreground: hsl(24, 9.8%, 10%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(20, 14.3%, 4.1%);
+  --radius: 0.5rem;
+  
+  /* Custom theme colors */
+  --gift-red: hsl(0, 84.2%, 60.2%);
+  --success-green: hsl(142, 76%, 36%);
+  --orange-accent: hsl(15, 100%, 60%);
+  --purple-accent: hsl(262, 83%, 58%);
+  --gold-accent: hsl(51, 100%, 50%);
+  --pink-accent: hsl(330, 100%, 71%);
+}
+
+.dark {
   --background: hsl(240, 10%, 3.9%);
   --foreground: hsl(0, 0%, 98%);
   --muted: hsl(240, 3.7%, 15.9%);
@@ -13,8 +44,8 @@
   --card-foreground: hsl(0, 0%, 98%);
   --border: hsl(240, 3.7%, 15.9%);
   --input: hsl(240, 3.7%, 15.9%);
-  --primary: hsl(47, 96%, 53%);
-  --primary-foreground: hsl(0, 0%, 9%);
+  --primary: hsl(0, 84.2%, 60.2%);
+  --primary-foreground: hsl(211, 100%, 99%);
   --secondary: hsl(240, 3.7%, 15.9%);
   --secondary-foreground: hsl(0, 0%, 98%);
   --accent: hsl(240, 3.7%, 15.9%);
@@ -23,12 +54,6 @@
   --destructive-foreground: hsl(0, 0%, 98%);
   --ring: hsl(240, 4.9%, 83.9%);
   --radius: 0.5rem;
-  
-  /* Custom colors */
-  --gold: hsl(47, 96%, 53%);
-  --gold-foreground: hsl(0, 0%, 9%);
-  --dark-gray: hsl(240, 5%, 11%);
-  --light-gray: hsl(240, 5%, 20%);
 }
 
 @layer base {
@@ -38,160 +63,195 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
-    background: linear-gradient(135deg, hsl(0, 0%, 0%) 0%, hsl(240, 5%, 11%) 50%, hsl(0, 0%, 0%) 100%);
-  }
-
-  html {
-    scroll-behavior: smooth;
   }
 }
 
-@layer components {
-  .glass-effect {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-  }
-  
-  .gradient-bg {
-    background: linear-gradient(135deg, hsl(0, 0%, 0%) 0%, hsl(240, 5%, 11%) 50%, hsl(240, 5%, 20%) 100%);
-  }
-  
-  .gold-gradient {
-    background: linear-gradient(135deg, hsl(47, 96%, 53%) 0%, hsl(45, 93%, 47%) 100%);
-  }
-  
-  .text-gold {
-    color: hsl(47, 96%, 53%);
-  }
-  
-  .bg-gold {
-    background-color: hsl(47, 96%, 53%);
-  }
-  
-  .border-gold {
-    border-color: hsl(47, 96%, 53%);
-  }
-  
-  .bg-dark-gray {
-    background-color: hsl(240, 5%, 11%);
-  }
-  
-  .bg-light-gray {
-    background-color: hsl(240, 5%, 20%);
-  }
-  
-  .hover-transform {
-    transition: all 0.3s ease;
-  }
-  
-  .hover-transform:hover {
-    transform: translateY(-5px);
-  }
-  
-  .floating-nav {
-    backdrop-filter: blur(20px);
-    background: rgba(0, 0, 0, 0.9);
-  }
-  
-  .bg-pattern {
-    background-image: radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
-  }
-  
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-  
-  .animate-pulse-slow {
-    animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-  
-  .animate-glow {
-    animation: glow 2s ease-in-out infinite alternate;
-  }
-  
-  .line-clamp-2 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-  }
-  
-  .line-clamp-3 {
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-  }
+/* Custom utility classes */
+.gift-red {
+  color: hsl(0, 84.2%, 60.2%);
 }
 
-@layer utilities {
-  .text-shadow {
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  }
-  
-  .shadow-glow {
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-  }
-  
-  .shadow-glow-lg {
-    box-shadow: 0 0 40px rgba(255, 215, 0, 0.4);
-  }
+.bg-gift-red {
+  background-color: hsl(0, 84.2%, 60.2%);
 }
 
+.success-green {
+  color: hsl(142, 76%, 36%);
+}
+
+.bg-success-green {
+  background-color: hsl(142, 76%, 36%);
+}
+
+.orange-accent {
+  color: hsl(15, 100%, 60%);
+}
+
+.bg-orange-accent {
+  background-color: hsl(15, 100%, 60%);
+}
+
+.purple-accent {
+  color: hsl(262, 83%, 58%);
+}
+
+.bg-purple-accent {
+  background-color: hsl(262, 83%, 58%);
+}
+
+.pink-accent {
+  color: hsl(330, 100%, 71%);
+}
+
+.bg-pink-accent {
+  background-color: hsl(330, 100%, 71%);
+}
+
+/* Custom animations */
 @keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
 }
 
-@keyframes glow {
-  from {
-    box-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
-  }
-  to {
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
-  }
+@keyframes slideUp {
+  0% { transform: translateY(20px); opacity: 0; }
+  100% { transform: translateY(0px); opacity: 1; }
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }
 
-.animate-fade-in-up {
-  animation: fadeInUp 0.6s ease-out;
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s ease-out;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+/* Bengali font support */
+.font-bengali {
+  font-family: 'Noto Sans Bengali', 'SolaimanLipi', 'Rupali', sans-serif;
 }
 
 /* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
 }
 
-::-webkit-scrollbar-track {
-  background: hsl(240, 5%, 11%);
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: hsl(60, 4.8%, 95.9%);
 }
 
-::-webkit-scrollbar-thumb {
-  background: hsl(47, 96%, 53%);
-  border-radius: 4px;
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: hsl(0, 84.2%, 60.2%);
+  border-radius: 3px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(45, 93%, 47%);
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: hsl(0, 84.2%, 50%);
 }
 
-/* Selection */
-::selection {
-  background: hsl(47, 96%, 53%);
-  color: hsl(0, 0%, 9%);
+/* Responsive text */
+.responsive-text {
+  font-size: clamp(0.875rem, 2.5vw, 1.125rem);
+}
+
+/* Product card hover effects */
+.product-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Button hover effects */
+.btn-hover {
+  transition: all 0.3s ease;
+}
+
+.btn-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Flash sale animation */
+.flash-sale {
+  background: linear-gradient(-45deg, hsl(0, 84.2%, 60.2%), hsl(15, 100%, 60%), hsl(262, 83%, 58%), hsl(330, 100%, 71%));
+  background-size: 400% 400%;
+  animation: gradient 3s ease infinite;
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Modal backdrop blur */
+.modal-backdrop {
+  backdrop-filter: blur(4px);
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Loading skeleton */
+.skeleton {
+  background: linear-gradient(90deg, hsl(60, 4.8%, 95.9%) 25%, hsl(60, 4.8%, 90%) 50%, hsl(60, 4.8%, 95.9%) 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Sticky header */
+.sticky-header {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid hsl(20, 5.9%, 90%);
+}
+
+/* Cart animation */
+.cart-item-enter {
+  animation: slideUp 0.3s ease-out;
+}
+
+.cart-item-exit {
+  animation: fadeOut 0.3s ease-out;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.8); }
+}
+
+/* WhatsApp button pulse */
+.whatsapp-pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Success checkmark animation */
+.success-check {
+  animation: checkmark 0.6s ease-in-out;
+}
+
+@keyframes checkmark {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
 }
