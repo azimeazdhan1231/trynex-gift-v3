@@ -3,7 +3,7 @@ import { Link, useLocation } from 'wouter';
 import { ShoppingCart, Menu, X, User, Package, Phone, Palette } from 'lucide-react';
 import { useCart } from '../../hooks/useCart';
 
-export default function Navigation() {
+export function Navigation() {
   const [location] = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { itemCount } = useCart();
