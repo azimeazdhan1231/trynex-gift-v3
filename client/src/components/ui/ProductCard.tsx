@@ -14,18 +14,15 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product, className = "", onQuickView }: ProductCardProps) => {
-  const { addToCart, isAddingToCart } = useCart();
+  const { addItem } = useCart();
   const { toast } = useToast();
 
   const handleAddToCart = () => {
-    addToCart({
-      productId: product.id,
-      quantity: 1,
-    });
+    addItem(product);
 
     toast({
       title: "কার্টে যুক্ত হয়েছে",
-      description: `${product.namebn} সফলভাবে কার্টে যুক্ত হয়েছে।`,
+      description: `${product.namebn || product.name} সফলভাবে কার্টে যুক্ত হয়েছে।`,
     });
   };
 
@@ -99,12 +96,10 @@ export const ProductCard = ({ product, className = "", onQuickView }: ProductCar
         <div className="flex gap-2">
           <Button
             onClick={handleAddToCart}
-            disabled={!product.inStock || isAddingToCart}
+            disabled={!product.inStock}
             className="flex-1 bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-semibold"
           >
-            {isAddingToCart ? (
-              "Adding..."
-            ) : !product.inStock ? (
+            {!product.inStock ? (
               "Stock Out"
             ) : (
               <>
