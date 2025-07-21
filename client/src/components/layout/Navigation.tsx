@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { Menu, X, ShoppingCart, User } from 'lucide-react';
@@ -12,12 +11,13 @@ export default function Navigation() {
   const { itemCount, isOpen, openCart, closeCart } = useCart();
 
   const navigation = [
-    { name: 'Home', href: '/', nameBn: 'হোম' },
-    { name: 'Products', href: '/products', nameBn: 'পণ্য' },
-    { name: 'Custom Design', href: '/custom-design', nameBn: 'কাস্টম ডিজাইন' },
+    { name: 'Home', nameBn: 'হোম', href: '/' },
+    { name: 'Products', nameBn: 'পণ্য', href: '/products' },
+    { name: 'Cart', nameBn: 'কার্ট', href: '/cart' },
+    { name: 'Custom Design', nameBn: 'কাস্টম ডিজাইন', href: '/custom-design' },
     { name: 'Track Order', href: '/track-order', nameBn: 'অর্ডার ট্র্যাক' },
     { name: 'Contact', href: '/contact', nameBn: 'যোগাযোগ' },
-    { name: 'About', href: '/about', nameBn: 'সম্পর্কে' },
+    { name: 'About', nameBn: 'সম্পর্কে', href: '/about' },
   ];
 
   const isActive = (href: string) => {

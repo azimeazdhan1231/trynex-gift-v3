@@ -214,10 +214,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { orderId } = req.params;
       const { status } = req.body;
+      console.log('Updating order status:', { orderId, status });
       const order = await storage.updateOrderStatus(orderId, status);
       if (!order) {
         return res.status(404).json({ error: "Order not found" });
       }
+      console.log('Order status updated successfully:', order);
       res.json(order);
     } catch (error) {
       console.error('Error updating order status:', error);

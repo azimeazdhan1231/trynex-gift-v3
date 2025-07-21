@@ -9,6 +9,7 @@ import { FloatingElements } from "@/components/ui/FloatingElements";
 // Pages
 import HomePage from "@/pages/HomePage";
 import ProductsPage from "@/pages/ProductsPage";
+import CartPage from "@/pages/CartPage";
 import CheckoutPage from "@/pages/CheckoutPage";
 import OrderTrackingPage from "@/pages/OrderTrackingPage";
 import CustomDesignPage from "@/pages/CustomDesignPage";
@@ -37,6 +38,7 @@ function App() {
           <Switch>
             <Route path="/" component={HomePage} />
             <Route path="/products" component={ProductsPage} />
+            <Route path="/cart" component={CartPage} />
             <Route path="/checkout" component={CheckoutPage} />
             <Route path="/order-tracking" component={OrderTrackingPage} />
             <Route path="/custom-design" component={CustomDesignPage} />

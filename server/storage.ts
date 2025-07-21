@@ -1,5 +1,3 @@
-
-
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { products, categories, orders, cartItems, contactMessages, customDesigns, promos } from "@shared/schema";
@@ -123,7 +121,7 @@ export const storage = {
     try {
       // Remove updatedAt from updates to avoid conflicts and add it manually
       const { updatedAt, createdAt, ...cleanUpdates } = updates as any;
-      
+
       const [product] = await db.update(products)
         .set({ ...cleanUpdates, updatedAt: new Date() })
         .where(eq(products.id, id))
@@ -242,16 +240,13 @@ export const storage = {
   },
 
   async updateOrderStatus(orderId: string, status: string) {
-    try {
-      const [order] = await db.update(orders)
-        .set({ orderStatus: status, updatedAt: new Date() })
-        .where(eq(orders.orderId, orderId))
-        .returning();
-      return order;
-    } catch (error) {
-      console.error('Error updating order status:', error);
-      throw error;
-    }
+    console.log('Storage: Updating order status for:', orderId, 'to:', status);
+    const [order] = await db.update(orders)
+      .set({ orderStatus: status, updatedAt: new Date() })
+      .where(eq(orders.orderId, orderId))
+      .returning();
+    console.log('Storage: Updated order:', order);
+    return order;
   },
 
   async updatePaymentStatus(orderId: string, status: string) {
@@ -338,7 +333,7 @@ export const storage = {
   }) {
     try {
       console.log('Adding to cart:', cartData);
-      
+
       // Check if item already exists in cart
       const existingItem = await db
         .select()
@@ -390,12 +385,12 @@ export const storage = {
         .set({ quantity })
         .where(eq(cartItems.id, id))
         .returning();
-      
+
       if (cartItem) {
         const product = await this.getProductById(cartItem.productId);
         return { ...cartItem, product };
       }
-      
+
       return cartItem;
     } catch (error) {
       console.error('Error updating cart item:', error);
