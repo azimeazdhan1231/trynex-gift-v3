@@ -1,193 +1,158 @@
+import React, { useState } from 'react';
+import { Link, useLocation } from 'wouter';
+import { ShoppingCart, Menu, X, User, Package, Phone, Palette } from 'lucide-react';
+import { useCart } from '../../hooks/useCart';
 
-import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Menu, X, Phone, Search } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { CartDrawer } from '@/components/ui/CartDrawer';
-import { useCart } from '@/hooks/useCart';
-
-export function Navigation() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const location = useLocation();
+export default function Navigation() {
+  const [location] = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { itemCount } = useCart();
 
-  const navigation = [
-    { name: 'Home', href: '/', namebn: 'হোম' },
-    { name: 'Products', href: '/products', namebn: 'প্রোডাক্ট' },
-    { name: 'Custom Design', href: '/custom-design', namebn: 'কাস্টম ডিজাইন' },
-    { name: 'Contact', href: '/contact', namebn: 'যোগাযোগ' },
+  const navItems = [
+    { href: '/', label: 'হোম', labelEn: 'Home' },
+    { href: '/products', label: 'পণ্য', labelEn: 'Products' },
+    { href: '/custom-design', label: 'কাস্টম ডিজাইন', labelEn: 'Custom Design', icon: Palette },
+    { href: '/track-order', label: 'অর্ডার ট্র্যাক', labelEn: 'Track Order', icon: Package },
+    { href: '/contact', label: 'যোগাযোগ', labelEn: 'Contact', icon: Phone },
+    { href: '/about', label: 'আমাদের সম্পর্কে', labelEn: 'About' }
   ];
 
-  const isActiveRoute = (href: string) => {
-    return location.pathname === href;
-  };
-
-  const handleCheckout = (items: any[]) => {
-    // Close cart drawer and redirect to checkout
-    setIsCartOpen(false);
-    window.location.href = '/checkout';
-  };
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
     <>
-      <nav className="bg-black/90 backdrop-blur-sm border-b border-gold/30 sticky top-0 z-50">
-        {/* Top bar with promo */}
-        <div className="bg-gold text-black text-center py-2 px-4 text-sm font-medium">
-          📞 মেগা অফার: ১০০০+ অর্ডারে ডিলিভারি ফ্রি | আজই অর্ডার করুন: +8801940689487
+      {/* Desktop Navigation */}
+      <nav className="hidden md:flex items-center justify-between px-6 py-4 bg-black/90 backdrop-blur-md border-b border-gold/20 sticky top-0 z-50">
+        {/* Logo */}
+        <Link href="/" className="flex items-center space-x-3">
+          <div className="w-10 h-10 bg-gradient-to-r from-gold to-yellow-400 rounded-full flex items-center justify-center">
+            <span className="text-black font-bold text-xl">T</span>
+          </div>
+          <div>
+            <h1 className="text-gold font-bold text-xl">TryneX</h1>
+            <p className="text-white/70 text-xs">Lifestyle</p>
+          </div>
+        </Link>
+
+        {/* Navigation Links */}
+        <div className="flex items-center space-x-8">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`group flex items-center space-x-2 px-3 py-2 rounded-md transition-all duration-300 ${
+                  location === item.href
+                    ? 'text-gold bg-gold/10 border border-gold/30'
+                    : 'text-white hover:text-gold hover:bg-gold/5'
+                }`}
+              >
+                {Icon && <Icon className="w-4 h-4" />}
+                <span className="font-medium">{item.labelEn}</span>
+                <span className="text-xs text-white/60">({item.label})</span>
+              </Link>
+            );
+          })}
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="text-2xl font-bold">
-                <span className="text-gold">Trynex</span>
-                <span className="text-white"> Lifestyle</span>
-              </div>
+        {/* Cart & Admin */}
+        <div className="flex items-center space-x-4">
+          <Link
+            href="/cart"
+            className="relative p-2 text-white hover:text-gold transition-colors group"
+          >
+            <ShoppingCart className="w-6 h-6" />
+            {itemCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-gold text-black text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                {itemCount}
+              </span>
+            )}
+          </Link>
+
+          <Link
+            href="/admin"
+            className="p-2 text-white hover:text-gold transition-colors"
+          >
+            <User className="w-6 h-6" />
+          </Link>
+        </div>
+      </nav>
+
+      {/* Mobile Navigation */}
+      <nav className="md:hidden bg-black/95 backdrop-blur-md border-b border-gold/20 sticky top-0 z-50">
+        <div className="flex items-center justify-between px-4 py-3">
+          {/* Logo */}
+          <Link href="/" className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-gradient-to-r from-gold to-yellow-400 rounded-full flex items-center justify-center">
+              <span className="text-black font-bold">T</span>
+            </div>
+            <div>
+              <h1 className="text-gold font-bold">TryneX</h1>
+              <p className="text-white/70 text-xs">Lifestyle</p>
+            </div>
+          </Link>
+
+          <div className="flex items-center space-x-3">
+            {/* Cart */}
+            <Link href="/cart" className="relative p-2 text-white">
+              <ShoppingCart className="w-6 h-6" />
+              {itemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-gold text-black text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                  {itemCount}
+                </span>
+              )}
             </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    isActiveRoute(item.href)
-                      ? 'text-gold bg-gold/10'
-                      : 'text-white hover:text-gold hover:bg-gold/5'
-                  }`}
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </div>
-
-            {/* Search & Actions */}
-            <div className="hidden md:flex items-center space-x-4">
-              {/* Search */}
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="bg-gray-900 text-white px-4 py-2 pl-10 rounded-lg border border-gold/30 focus:outline-none focus:border-gold w-64"
-                />
-                <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-              </div>
-
-              {/* Phone */}
-              <a
-                href="tel:+8801940689487"
-                className="flex items-center space-x-2 text-gold hover:text-gold/80 transition-colors"
-              >
-                <Phone className="h-5 w-5" />
-                <span className="font-medium">+8801940689487</span>
-              </a>
-
-              {/* Cart */}
-              <button
-                onClick={() => setIsCartOpen(true)}
-                className="relative p-2 text-white hover:text-gold transition-colors"
-              >
-                <ShoppingCart className="h-6 w-6" />
-                {itemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-gold text-black text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
-                    {itemCount > 99 ? '99+' : itemCount}
-                  </span>
-                )}
-              </button>
-            </div>
-
-            {/* Mobile menu button */}
-            <div className="md:hidden flex items-center space-x-4">
-              {/* Mobile Cart */}
-              <button
-                onClick={() => setIsCartOpen(true)}
-                className="relative p-2 text-white hover:text-gold transition-colors"
-              >
-                <ShoppingCart className="h-6 w-6" />
-                {itemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-gold text-black text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
-                    {itemCount > 99 ? '99+' : itemCount}
-                  </span>
-                )}
-              </button>
-
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="p-2 text-white hover:text-gold transition-colors"
-              >
-                {isMobileMenuOpen ? (
-                  <X className="h-6 w-6" />
-                ) : (
-                  <Menu className="h-6 w-6" />
-                )}
-              </button>
-            </div>
+            {/* Menu Button */}
+            <button
+              onClick={toggleMenu}
+              className="p-2 text-white hover:text-gold transition-colors"
+            >
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-black/95 border-t border-gold/30"
-            >
-              <div className="px-4 py-4 space-y-2">
-                {/* Mobile Search */}
-                <div className="relative mb-4">
-                  <input
-                    type="text"
-                    placeholder="Search products..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-gray-900 text-white px-4 py-2 pl-10 rounded-lg border border-gold/30 focus:outline-none focus:border-gold"
-                  />
-                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-                </div>
-
-                {navigation.map((item) => (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                      isActiveRoute(item.href)
-                        ? 'text-gold bg-gold/10'
-                        : 'text-white hover:text-gold hover:bg-gold/5'
-                    }`}
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-
-                {/* Mobile Phone */}
-                <a
-                  href="tel:+8801940689487"
-                  className="flex items-center space-x-2 px-3 py-2 text-gold hover:text-gold/80 transition-colors"
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="bg-black/95 border-t border-gold/20 py-4">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center space-x-3 px-4 py-3 transition-all duration-300 ${
+                    location === item.href
+                      ? 'text-gold bg-gold/10 border-r-2 border-gold'
+                      : 'text-white hover:text-gold hover:bg-gold/5'
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  <Phone className="h-5 w-5" />
-                  <span className="font-medium">+8801940689487</span>
-                </a>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </nav>
+                  {Icon && <Icon className="w-5 h-5" />}
+                  <div>
+                    <div className="font-medium">{item.labelEn}</div>
+                    <div className="text-sm text-white/60">{item.label}</div>
+                  </div>
+                </Link>
+              );
+            })}
 
-      {/* Cart Drawer */}
-      <CartDrawer
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-        onCheckout={handleCheckout}
-      />
+            <Link
+              href="/admin"
+              className="flex items-center space-x-3 px-4 py-3 text-white hover:text-gold hover:bg-gold/5 transition-colors"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <User className="w-5 h-5" />
+              <div>
+                <div className="font-medium">Admin</div>
+                <div className="text-sm text-white/60">অ্যাডমিন</div>
+              </div>
+            </Link>
+          </div>
+        )}
+      </nav>
     </>
   );
 }

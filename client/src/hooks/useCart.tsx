@@ -1,98 +1,105 @@
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
-import { getSessionId } from '@/utils/helpers';
-import type { CartItem } from '@/types';
+import { useState, useEffect } from 'react';
 
-export const useCart = () => {
-  const queryClient = useQueryClient();
-  const sessionId = getSessionId();
+export interface CartItem {
+  id: string;
+  productId: string;
+  name: string;
+  nameEn: string;
+  nameBn: string;
+  price: number;
+  quantity: number;
+  image?: string;
+  customDesign?: any;
+  category: string;
+}
 
-  const { data: cartItems = [], isLoading } = useQuery({
-    queryKey: ['/api/cart', sessionId],
-    queryFn: async () => {
-      const response = await fetch(`/api/cart/${sessionId}`);
-      if (!response.ok) throw new Error('Failed to fetch cart');
-      const items = await response.json();
-      console.log('Cart items loaded:', items);
-      return items;
-    },
-    refetchOnMount: true,
-    refetchOnWindowFocus: false,
-  });
+export function useCart() {
+  const [items, setItems] = useState<CartItem[]>([]);
 
-  const addToCartMutation = useMutation({
-    mutationFn: async (item: { productId: number; quantity: number; customDesign?: any }) => {
-      console.log('Adding item to cart:', item);
-      const response = await apiRequest('POST', '/api/cart', {
-        ...item,
-        sessionId,
-      });
-      const result = await response.json();
-      console.log('Cart add response:', result);
-      return result;
-    },
-    onSuccess: (data) => {
-      console.log('Successfully added to cart:', data);
-      queryClient.invalidateQueries({ queryKey: ['/api/cart', sessionId] });
-    },
-    onError: (error) => {
-      console.error('Failed to add to cart:', error);
+  // Load cart from localStorage on mount
+  useEffect(() => {
+    try {
+      const savedCart = localStorage.getItem('cart');
+      if (savedCart) {
+        setItems(JSON.parse(savedCart));
+      }
+    } catch (error) {
+      console.error('Error loading cart:', error);
     }
-  });
+  }, []);
 
-  const updateCartMutation = useMutation({
-    mutationFn: async ({ id, quantity }: { id: number; quantity: number }) => {
-      const response = await apiRequest('PUT', `/api/cart/${id}`, { quantity });
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/cart', sessionId] });
-    },
-    onError: (error) => {
-      console.error('Failed to update cart item:', error);
+  // Save cart to localStorage whenever items change
+  useEffect(() => {
+    try {
+      localStorage.setItem('cart', JSON.stringify(items));
+    } catch (error) {
+      console.error('Error saving cart:', error);
     }
-  });
+  }, [items]);
 
-  const removeFromCartMutation = useMutation({
-    mutationFn: async (id: number) => {
-      await apiRequest('DELETE', `/api/cart/${id}`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/cart', sessionId] });
-    },
-    onError: (error) => {
-      console.error('Failed to remove from cart:', error);
-    }
-  });
+  const addItem = (product: any, quantity: number = 1, customDesign?: any) => {
+    setItems(currentItems => {
+      const existingItemIndex = currentItems.findIndex(
+        item => item.productId === product.id && 
+                JSON.stringify(item.customDesign) === JSON.stringify(customDesign)
+      );
 
-  const clearCartMutation = useMutation({
-    mutationFn: async () => {
-      await apiRequest('DELETE', `/api/cart/session/${sessionId}`);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/cart', sessionId] });
-    },
-    onError: (error) => {
-      console.error('Failed to clear cart:', error);
+      if (existingItemIndex >= 0) {
+        // Update existing item quantity
+        const updatedItems = [...currentItems];
+        updatedItems[existingItemIndex].quantity += quantity;
+        return updatedItems;
+      } else {
+        // Add new item
+        const newItem: CartItem = {
+          id: `${product.id}-${Date.now()}`,
+          productId: product.id,
+          name: product.name || product.nameEn,
+          nameEn: product.nameEn || product.name,
+          nameBn: product.nameBn || product.name,
+          price: product.price,
+          quantity,
+          image: product.images?.[0] || product.image,
+          customDesign,
+          category: product.category
+        };
+        return [...currentItems, newItem];
+      }
+    });
+  };
+
+  const removeItem = (itemId: string) => {
+    setItems(currentItems => currentItems.filter(item => item.id !== itemId));
+  };
+
+  const updateQuantity = (itemId: string, quantity: number) => {
+    if (quantity <= 0) {
+      removeItem(itemId);
+      return;
     }
-  });
+    
+    setItems(currentItems =>
+      currentItems.map(item =>
+        item.id === itemId ? { ...item, quantity } : item
+      )
+    );
+  };
+
+  const clearCart = () => {
+    setItems([]);
+  };
+
+  const totalPrice = items.reduce((total, item) => total + (item.price * item.quantity), 0);
+  const itemCount = items.reduce((total, item) => total + item.quantity, 0);
 
   return {
-    cartItems,
-    isLoading,
-    addToCart: addToCartMutation.mutate,
-    updateCart: updateCartMutation.mutate,
-    removeFromCart: removeFromCartMutation.mutate,
-    clearCart: clearCartMutation.mutate,
-    isAddingToCart: addToCartMutation.isPending,
-    isUpdating: updateCartMutation.isPending,
-    isRemoving: removeFromCartMutation.isPending,
-    // Cart item count for navigation
-    itemCount: cartItems.reduce((count: number, item: any) => count + item.quantity, 0),
-    // Total price
-    totalPrice: cartItems.reduce((total: number, item: any) => {
-      return total + ((item.product?.price || 0) * item.quantity);
-    }, 0)
+    items,
+    addItem,
+    removeItem,
+    updateQuantity,
+    clearCart,
+    totalPrice,
+    itemCount
   };
-};
+}
