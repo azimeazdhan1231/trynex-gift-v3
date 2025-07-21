@@ -52,7 +52,7 @@ export default function Navigation() {
             <div className="hidden lg:flex items-center space-x-8">
               {navigation.map((item) => (
                 <Link key={item.name} href={item.href}>
-                  <motion.a
+                  <motion.div
                     className={`text-sm font-medium transition-colors cursor-pointer ${
                       isActive(item.href)
                         ? 'text-gold'
@@ -65,7 +65,7 @@ export default function Navigation() {
                       <div>{item.name}</div>
                       <div className="text-xs text-gray-400">{item.nameBn}</div>
                     </div>
-                  </motion.a>
+                  </motion.div>
                 </Link>
               ))}
             </div>
@@ -128,7 +128,7 @@ export default function Navigation() {
                 <div className="py-4 space-y-2">
                   {navigation.map((item) => (
                     <Link key={item.name} href={item.href}>
-                      <motion.a
+                      <motion.div
                         className={`block px-4 py-2 text-sm font-medium transition-colors cursor-pointer ${
                           isActive(item.href)
                             ? 'text-gold bg-gold/10'
@@ -140,7 +140,7 @@ export default function Navigation() {
                       >
                         <div>{item.name}</div>
                         <div className="text-xs text-gray-400">{item.nameBn}</div>
-                      </motion.a>
+                      </motion.div>
                     </Link>
                   ))}
                 </div>

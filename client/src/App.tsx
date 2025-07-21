@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Route, Switch } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
-import { Navigation } from "@/components/layout/Navigation";
+import Navigation from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
 import { CartDrawer } from "@/components/ui/CartDrawer";
 import { FloatingElements } from "@/components/ui/FloatingElements";
