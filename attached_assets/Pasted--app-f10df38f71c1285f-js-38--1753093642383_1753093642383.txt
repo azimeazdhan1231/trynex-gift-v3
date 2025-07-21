@@ -1,0 +1,171 @@
+_app-f10df38f71c1285f.js:38 
+      /////////////////////
+   ///////////////////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////        Curious and driven?
+  ///////////////@@@@@@@///////        Work with us!
+  ///////////////@@@@@@@///////
+  ///////////////@@@@@@@///////        https://join.replit.com/hack.with.us
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@#//////////////
+   ///////////////////////////
+      /////////////////////
+      
+_app-f10df38f71c1285f.js:38 [LaunchDarkly] LaunchDarkly client initialized
+/~:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+7Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.Understand this error
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'ambient-light-sensor'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'battery'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'execution-while-not-rendered'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'execution-while-out-of-viewport'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'layout-animations'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'legacy-image-formats'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'navigation-override'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'oversized-images'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'publickey-credentials'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'speaker-selection'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'unoptimized-images'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'unsized-media'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Unrecognized feature: 'pointer-lock'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Allow attribute will take precedence over 'allowfullscreen'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+framework-d6ce62f547324137.js:1 Allow attribute will take precedence over 'allowpaymentrequest'.
+_ @ framework-d6ce62f547324137.js:1Understand this warning
+stallwart.build.js:1 stallwart: failed ping 1
+attached_assets/image_1753092629820.png:1  Failed to load resource: the server responded with a status of 404 ()Understand this error
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Are0%3A:32 Unrecognized feature: 'ambient-light-sensor'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Are0%3A:32 Unrecognized feature: 'battery'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Are0%3A:32 Unrecognized feature: 'execution-while-not-rendered'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Are0%3A:32 Unrecognized feature: 'execution-while-out-of-viewport'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Are0%3A:32 Unrecognized feature: 'layout-animations'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Are0%3A:32 Unrecognized feature: 'legacy-image-formats'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Are0%3A:32 Unrecognized feature: 'navigation-override'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Are0%3A:32 Unrecognized feature: 'oversized-images'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Are0%3A:32 Unrecognized feature: 'publickey-credentials'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Are0%3A:32 Unrecognized feature: 'speaker-selection'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Are0%3A:32 Unrecognized feature: 'unoptimized-images'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Are0%3A:32 Unrecognized feature: 'unsized-media'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Are0%3A:32 Allow attribute will take precedence over 'allowfullscreen'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Are0%3A:32 Allow attribute will take precedence over 'allowpaymentrequest'.Understand this warning
+stallwart.build.js:1 stallwart: failed ping 1
+stallwart.build.js:1 stallwart: failed ping 2
+stallwart.build.js:1 stallwart: failed ping 3
+stallwart.build.js:1 stallwart: failed ping 4
+stallwart.build.js:1 stallwart: failed ping 5
+stallwart.build.js:1 stallwart: session stalled
+eruda.js:2 SyntaxError: The requested module '/src/components/layout/Navigation.tsx?t=1753093468231' does not provide an export named 'Navigation' (at App.tsx:20:10)
+Mt.forEach.n.<computed> @ VM118 eruda.js:2
+warnFailedUpdate @ VM456 client:174
+fetchUpdate @ VM456 client:213
+await in fetchUpdate
+queueUpdate @ VM456 client:186
+(anonymous) @ VM456 client:642
+handleMessage @ VM456 client:640
+(anonymous) @ VM456 client:550Understand this error
+eruda.js:2 [hmr] Failed to reload /src/App.tsx?v=xadxrDjP6bsVIcttbshKR. This could be due to syntax errors or importing non-existent modules. (see errors above)
+Mt.forEach.n.<computed> @ VM118 eruda.js:2
+warnFailedUpdate @ VM456 client:176
+fetchUpdate @ VM456 client:213
+await in fetchUpdate
+queueUpdate @ VM456 client:186
+(anonymous) @ VM456 client:642
+handleMessage @ VM456 client:640
+(anonymous) @ VM456 client:550Understand this error
+eruda.js:2 SyntaxError: The requested module '/src/components/layout/Navigation.tsx?t=1753093468231' does not provide an export named 'Navigation' (at App.tsx:20:10)
+Mt.forEach.n.<computed> @ VM118 eruda.js:2
+warnFailedUpdate @ VM456 client:174
+fetchUpdate @ VM456 client:213
+await in fetchUpdate
+queueUpdate @ VM456 client:186
+(anonymous) @ VM456 client:642
+handleMessage @ VM456 client:640
+(anonymous) @ VM456 client:550Understand this error
+eruda.js:2 [hmr] Failed to reload /src/App.tsx?v=xadxrDjP6bsVIcttbshKR. This could be due to syntax errors or importing non-existent modules. (see errors above)
+Mt.forEach.n.<computed> @ VM118 eruda.js:2
+warnFailedUpdate @ VM456 client:176
+fetchUpdate @ VM456 client:213
+await in fetchUpdate
+queueUpdate @ VM456 client:186
+(anonymous) @ VM456 client:642
+handleMessage @ VM456 client:640
+(anonymous) @ VM456 client:550Understand this error
+eruda.js:2 Warning: validateDOMNesting(...): <a> cannot appear as a descendant of <a>.
+    at a
+    at MotionComponent (https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/framer-motion.js?v=a66288b3:6536:40)
+    at a
+    at https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/wouter.js?v=a66288b3:337:18
+    at div
+    at div
+    at div
+    at nav
+    at Navigation (https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/src/components/layout/Navigation.tsx?t=1753093468231:26:22)
+    at div
+    at QueryClientProvider (https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=a66288b3:2805:3)
+    at App
+Mt.forEach.n.<computed> @ VM118 eruda.js:2
+printWarning @ VM140 chunk-UPELNCPK.js:521
+error @ VM140 chunk-UPELNCPK.js:505
+validateDOMNesting @ VM140 chunk-UPELNCPK.js:8256
+createInstance @ VM140 chunk-UPELNCPK.js:8328
+completeWork @ VM140 chunk-UPELNCPK.js:16290
+completeUnitOfWork @ VM140 chunk-UPELNCPK.js:19224
+performUnitOfWork @ VM140 chunk-UPELNCPK.js:19206
+workLoopSync @ VM140 chunk-UPELNCPK.js:19137
+renderRootSync @ VM140 chunk-UPELNCPK.js:19116
+performSyncWorkOnRoot @ VM140 chunk-UPELNCPK.js:18874
+flushSyncCallbacks @ VM140 chunk-UPELNCPK.js:9119
+flushSync @ VM140 chunk-UPELNCPK.js:18959
+scheduleRefresh @ VM140 chunk-UPELNCPK.js:20004
+(anonymous) @ VM143 @react-refresh:188
+performReactRefresh @ VM143 @react-refresh:180
+(anonymous) @ VM143 @react-refresh:474
+setTimeout
+(anonymous) @ VM143 @react-refresh:465
+validateRefreshBoundaryAndEnqueueUpdate @ VM143 @react-refresh:512
+(anonymous) @ VM215 CanvasEditor.tsx:775
+(anonymous) @ VM456 client:34
+(anonymous) @ VM456 client:218
+(anonymous) @ VM456 client:193
+queueUpdate @ VM456 client:193
+await in queueUpdate
+(anonymous) @ VM456 client:642
+handleMessage @ VM456 client:640
+(anonymous) @ VM456 client:550Understand this error
+eruda.js:2 [vite] server connection lost. Polling for restart...
+eruda.js:2  GET https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/ 502 (Bad Gateway)
+window.fetch @ VM118 eruda.js:2
+ping @ VM456 client:736
+waitForSuccessfulPing @ VM456 client:749
+(anonymous) @ VM456 client:561Understand this error
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/@vite/client:562  GET https://a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/ 502 (Bad Gateway)
+(anonymous) @ VM456 client:562Understand this error
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arg5%3A:32 Unrecognized feature: 'ambient-light-sensor'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arg5%3A:32 Unrecognized feature: 'battery'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arg5%3A:32 Unrecognized feature: 'execution-while-not-rendered'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arg5%3A:32 Unrecognized feature: 'execution-while-out-of-viewport'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arg5%3A:32 Unrecognized feature: 'layout-animations'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arg5%3A:32 Unrecognized feature: 'legacy-image-formats'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arg5%3A:32 Unrecognized feature: 'navigation-override'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arg5%3A:32 Unrecognized feature: 'oversized-images'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arg5%3A:32 Unrecognized feature: 'publickey-credentials'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arg5%3A:32 Unrecognized feature: 'speaker-selection'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arg5%3A:32 Unrecognized feature: 'unoptimized-images'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arg5%3A:32 Unrecognized feature: 'unsized-media'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arg5%3A:32 Allow attribute will take precedence over 'allowfullscreen'.Understand this warning
+a80fdb3b-c1f0-4e4b-b9c7-7ba8ddeff08f-00-24so1itx21m89.pike.replit.dev/__replco/workspace_iframe.html?initialPath=%2F&id=%3Arg5%3A:32 Allow attribute will take precedence over 'allowpaymentrequest'.Understand this warning
+App.tsx:4 Uncaught SyntaxError: The requested module '/src/components/layout/Navigation.tsx' does not provide an export named 'Navigation' (at App.tsx:4:10)
