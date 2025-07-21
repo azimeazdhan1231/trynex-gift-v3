@@ -1,162 +1,160 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'wouter';
-import { ShoppingCart, Menu, X, User, Package, Phone, Palette } from 'lucide-react';
+import { Menu, X, ShoppingCart, User } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/hooks/useCart';
+import { CartDrawer } from '@/components/ui/CartDrawer';
 
-export function Navigation() {
+export default function Navigation() {
   const [location] = useLocation();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const { itemCount } = useCart();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { itemCount, isOpen, openCart, closeCart } = useCart();
 
-  const navItems = [
-    { href: '/', label: 'হোম', labelEn: 'Home' },
-    { href: '/products', label: 'পণ্য', labelEn: 'Products' },
-    { href: '/custom-design', label: 'কাস্টম ডিজাইন', labelEn: 'Custom Design', icon: Palette },
-    { href: '/track-order', label: 'অর্ডার ট্র্যাক', labelEn: 'Track Order', icon: Package },
-    { href: '/contact', label: 'যোগাযোগ', labelEn: 'Contact', icon: Phone },
-    { href: '/about', label: 'আমাদের সম্পর্কে', labelEn: 'About' }
+  const navigation = [
+    { name: 'Home', href: '/', nameBn: 'হোম' },
+    { name: 'Products', href: '/products', nameBn: 'পণ্য' },
+    { name: 'Custom Design', href: '/custom-design', nameBn: 'কাস্টম ডিজাইন' },
+    { name: 'Track Order', href: '/track-order', nameBn: 'অর্ডার ট্র্যাক' },
+    { name: 'Contact', href: '/contact', nameBn: 'যোগাযোগ' },
+    { name: 'About', href: '/about', nameBn: 'সম্পর্কে' },
   ];
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const isActive = (href: string) => {
+    if (href === '/' && location === '/') return true;
+    if (href !== '/' && location.startsWith(href)) return true;
+    return false;
+  };
 
   return (
     <>
-      {/* Desktop Navigation */}
-      <nav className="hidden md:flex items-center justify-between px-6 py-4 bg-black/90 backdrop-blur-md border-b border-gold/20 sticky top-0 z-50">
-        {/* Logo */}
-        <Link href="/" className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gradient-to-r from-gold to-yellow-400 rounded-full flex items-center justify-center">
-            <span className="text-black font-bold text-xl">T</span>
-          </div>
-          <div>
-            <h1 className="text-gold font-bold text-xl">TryneX</h1>
-            <p className="text-white/70 text-xs">Lifestyle</p>
-          </div>
-        </Link>
-
-        {/* Navigation Links */}
-        <div className="flex items-center space-x-8">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`group flex items-center space-x-2 px-3 py-2 rounded-md transition-all duration-300 ${
-                  location === item.href
-                    ? 'text-gold bg-gold/10 border border-gold/30'
-                    : 'text-white hover:text-gold hover:bg-gold/5'
-                }`}
+      <nav className="bg-black/95 backdrop-blur-sm border-b border-gold/20 sticky top-0 z-40">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <Link href="/">
+              <motion.div
+                className="flex items-center space-x-2 cursor-pointer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                {Icon && <Icon className="w-4 h-4" />}
-                <span className="font-medium">{item.labelEn}</span>
-                <span className="text-xs text-white/60">({item.label})</span>
-              </Link>
-            );
-          })}
-        </div>
-
-        {/* Cart & Admin */}
-        <div className="flex items-center space-x-4">
-          <button
-              onClick={() => setIsCartOpen(true)}
-              className="relative p-2 text-white hover:text-gold transition-colors"
-            >
-              <ShoppingCart className="h-6 w-6" />
-              {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-gold text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                  {itemCount}
-                </span>
-              )}
-            </button>
-
-          <Link
-            href="/admin"
-            className="p-2 text-white hover:text-gold transition-colors"
-          >
-            <User className="w-6 h-6" />
-          </Link>
-        </div>
-      </nav>
-
-      {/* Mobile Navigation */}
-      <nav className="md:hidden bg-black/95 backdrop-blur-md border-b border-gold/20 sticky top-0 z-50">
-        <div className="flex items-center justify-between px-4 py-3">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-gold to-yellow-400 rounded-full flex items-center justify-center">
-              <span className="text-black font-bold">T</span>
-            </div>
-            <div>
-              <h1 className="text-gold font-bold">TryneX</h1>
-              <p className="text-white/70 text-xs">Lifestyle</p>
-            </div>
-          </Link>
-
-          <div className="flex items-center space-x-3">
-            {/* Cart */}
-            <button
-              onClick={() => setIsCartOpen(true)}
-              className="relative p-2 text-white hover:text-gold transition-colors"
-            >
-              <ShoppingCart className="h-6 w-6" />
-              {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-gold text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                  {itemCount}
-                </span>
-              )}
-            </button>
-
-            {/* Menu Button */}
-            <button
-              onClick={toggleMenu}
-              className="p-2 text-white hover:text-gold transition-colors"
-            >
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="bg-black/95 border-t border-gold/20 py-4">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center space-x-3 px-4 py-3 transition-all duration-300 ${
-                    location === item.href
-                      ? 'text-gold bg-gold/10 border-r-2 border-gold'
-                      : 'text-white hover:text-gold hover:bg-gold/5'
-                  }`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {Icon && <Icon className="w-5 h-5" />}
-                  <div>
-                    <div className="font-medium">{item.labelEn}</div>
-                    <div className="text-sm text-white/60">{item.label}</div>
-                  </div>
-                </Link>
-              );
-            })}
-
-            <Link
-              href="/admin"
-              className="flex items-center space-x-3 px-4 py-3 text-white hover:text-gold hover:bg-gold/5 transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <User className="w-5 h-5" />
-              <div>
-                <div className="font-medium">Admin</div>
-                <div className="text-sm text-white/60">অ্যাডমিন</div>
-              </div>
+                <div className="text-2xl font-bold">
+                  <span className="text-gold">Tryne</span>
+                  <span className="text-white">X</span>
+                </div>
+                <div className="text-xs text-gray-400 hidden sm:block">
+                  Lifestyle
+                </div>
+              </motion.div>
             </Link>
+
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center space-x-8">
+              {navigation.map((item) => (
+                <Link key={item.name} href={item.href}>
+                  <motion.a
+                    className={`text-sm font-medium transition-colors cursor-pointer ${
+                      isActive(item.href)
+                        ? 'text-gold'
+                        : 'text-white hover:text-gold'
+                    }`}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ y: 0 }}
+                  >
+                    <div className="text-center">
+                      <div>{item.name}</div>
+                      <div className="text-xs text-gray-400">{item.nameBn}</div>
+                    </div>
+                  </motion.a>
+                </Link>
+              ))}
+            </div>
+
+            {/* Right Side Actions */}
+            <div className="flex items-center space-x-4">
+              {/* Cart Icon */}
+              <motion.button
+                onClick={openCart}
+                className="relative p-2 text-white hover:text-gold transition-colors"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <ShoppingCart className="h-6 w-6" />
+                {itemCount > 0 && (
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -top-1 -right-1 bg-gold text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
+                  >
+                    {itemCount}
+                  </motion.span>
+                )}
+              </motion.button>
+
+              {/* Admin Link */}
+              <Link href="/admin">
+                <motion.button
+                  className="p-2 text-white hover:text-gold transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <User className="h-6 w-6" />
+                </motion.button>
+              </Link>
+
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="lg:hidden p-2 text-white hover:text-gold transition-colors"
+              >
+                {isMobileMenuOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Menu className="h-6 w-6" />
+                )}
+              </button>
+            </div>
           </div>
-        )}
+
+          {/* Mobile Navigation */}
+          <AnimatePresence>
+            {isMobileMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="lg:hidden border-t border-gold/20"
+              >
+                <div className="py-4 space-y-2">
+                  {navigation.map((item) => (
+                    <Link key={item.name} href={item.href}>
+                      <motion.a
+                        className={`block px-4 py-2 text-sm font-medium transition-colors cursor-pointer ${
+                          isActive(item.href)
+                            ? 'text-gold bg-gold/10'
+                            : 'text-white hover:text-gold hover:bg-gold/5'
+                        }`}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        whileHover={{ x: 4 }}
+                        whileTap={{ x: 0 }}
+                      >
+                        <div>{item.name}</div>
+                        <div className="text-xs text-gray-400">{item.nameBn}</div>
+                      </motion.a>
+                    </Link>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </nav>
+
+      {/* Cart Drawer */}
+      <CartDrawer
+        isOpen={isOpen}
+        onClose={closeCart}
+      />
     </>
   );
 }

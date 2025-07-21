@@ -1,3 +1,4 @@
+
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
@@ -15,10 +16,14 @@ interface CartStore {
   items: CartItem[];
   itemCount: number;
   total: number;
+  isOpen: boolean;
   addItem: (product: Omit<CartItem, 'quantity'>) => void;
   updateQuantity: (id: number, quantity: number) => void;
   removeItem: (id: number) => void;
   clearCart: () => void;
+  openCart: () => void;
+  closeCart: () => void;
+  toggleCart: () => void;
 }
 
 const useCartStore = create<CartStore>()(
@@ -27,6 +32,7 @@ const useCartStore = create<CartStore>()(
       items: [],
       itemCount: 0,
       total: 0,
+      isOpen: false,
       addItem: (product) => set((state) => {
         const existingItem = state.items.find(item => item.id === product.id);
         let newItems;
@@ -65,6 +71,9 @@ const useCartStore = create<CartStore>()(
         return { items: newItems, itemCount, total };
       }),
       clearCart: () => set({ items: [], itemCount: 0, total: 0 }),
+      openCart: () => set({ isOpen: true }),
+      closeCart: () => set({ isOpen: false }),
+      toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
     }),
     {
       name: 'cart-storage',
@@ -79,10 +88,14 @@ export const useCart = () => {
     items: store.items,
     itemCount: store.itemCount,
     total: store.total,
+    isOpen: store.isOpen,
     addItem: store.addItem,
     updateQuantity: store.updateQuantity,
     removeItem: store.removeItem,
     clearCart: store.clearCart,
-    addToCart: store.addItem, // Alias for addToCart
+    openCart: store.openCart,
+    closeCart: store.closeCart,
+    toggleCart: store.toggleCart,
+    addToCart: store.addItem, // Alias for compatibility
   };
 };
