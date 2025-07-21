@@ -17,7 +17,7 @@ export const products = pgTable("products", {
   tags: jsonb("tags").$type<string[]>().default([]),
   inStock: boolean("in_stock").notNull().default(true),
   stockQuantity: integer("stock_quantity").default(0),
-  featured: boolean("featured").default(false),
+  isFeatured: boolean("is_featured").default(false),
   isCustomizable: boolean("is_customizable").default(false),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
