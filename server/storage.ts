@@ -27,17 +27,18 @@ export const storage = {
   }) {
     try {
       let query = db.select().from(products);
+      const conditions = [];
 
       if (filters?.category && filters.category !== 'all') {
-        query = query.where(eq(products.category, filters.category));
+        conditions.push(eq(products.category, filters.category));
       }
 
       if (filters?.featured !== undefined) {
-        query = query.where(eq(products.isFeatured, filters.featured));
+        conditions.push(eq(products.isFeatured, filters.featured));
       }
 
       if (filters?.search) {
-        query = query.where(
+        conditions.push(
           or(
             ilike(products.name, `%${filters.search}%`),
             ilike(products.description, `%${filters.search}%`)
@@ -45,7 +46,11 @@ export const storage = {
         );
       }
 
-      const result = await query;
+      if (conditions.length > 0) {
+        query = query.where(and(...conditions));
+      }
+
+      const result = await query.orderBy(products.id);
       console.log(`Found ${result.length} products`);
       return result;
     } catch (error) {
