@@ -1,34 +1,34 @@
 import { Fragment } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
+import { ShoppingBag, X, Plus, Minus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useCartStore } from "@/store/cartStore";
+import { useCartStore } from "@/lib/cart-store";
 import { useCart } from "@/hooks/useCart";
 import { formatPrice, calculateDeliveryFee } from "@/utils/helpers";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { useLocation } from "wouter";
 
 export const CartDrawer = () => {
-  const { isOpen, toggleCart, items, totalPrice } = useCartStore();
-  const { cartItems, isLoading, updateCart, removeFromCart } = useCart();
-  const [, setLocation] = useLocation();
+  const { 
+    isOpen, 
+    toggleCart, 
+    getTotalItems, 
+    getSubtotal, 
+    getDeliveryFee, 
+    getTotal 
+  } = useCartStore();
 
-  const handleUpdateQuantity = (id: number, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(id);
-    } else {
-      updateCart({ id, quantity });
-    }
-  };
+  const { cartItems, updateCart, removeFromCart } = useCart();
+  const [, setLocation] = useLocation();
 
   const handleCheckout = () => {
     toggleCart();
     setLocation("/checkout");
   };
 
-  const subtotal = totalPrice;
-  const deliveryFee = calculateDeliveryFee("ঢাকা", subtotal);
-  const total = subtotal + deliveryFee;
+  const subtotal = getSubtotal();
+  const deliveryFee = getDeliveryFee();
+  const total = getTotal();
 
   return (
     <AnimatePresence>
@@ -41,7 +41,7 @@ export const CartDrawer = () => {
             className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
             onClick={toggleCart}
           />
-          
+
           <motion.div
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
@@ -62,9 +62,7 @@ export const CartDrawer = () => {
             </div>
 
             <div className="flex-1 overflow-y-auto p-6">
-              {isLoading ? (
-                <LoadingSpinner className="mt-8" />
-              ) : items.length === 0 ? (
+              {cartItems.length === 0 ? (
                 <div className="text-center py-12">
                   <ShoppingBag className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                   <p className="text-gray-400 text-lg">Your cart is empty</p>
@@ -72,57 +70,43 @@ export const CartDrawer = () => {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {items.map((item) => (
-                    <motion.div
-                      key={item.id}
-                      layout
-                      className="glass-effect rounded-lg p-4"
-                    >
+                  {cartItems.map((item) => (
+                    <div key={item.id} className="glass-effect rounded-lg p-4">
                       <div className="flex gap-4">
-                        <img
-                          src={item.product.images[0] || "https://images.unsplash.com/photo-1542291026-7eec264c27ff"}
+                        <img 
+                          src={item.product.images[0] || "https://images.unsplash.com/photo-1542291026-7eec264c27ff"} 
                           alt={item.product.name}
                           className="w-16 h-16 object-cover rounded-lg"
                         />
-                        
                         <div className="flex-1">
-                          <h4 className="font-semibold text-white text-sm">
-                            {item.product.name}
-                          </h4>
-                          <p className="text-xs text-gray-300 mb-2">
-                            {item.product.namebn}
-                          </p>
-                          
+                          <h4 className="font-semibold text-white text-sm">{item.product.name}</h4>
+                          <p className="text-xs text-gray-300 mb-2">{item.product.namebn}</p>
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               <Button
                                 size="sm"
                                 variant="outline"
                                 className="h-8 w-8 p-0 border-gold/30"
-                                onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
+                                onClick={() => updateCart({ id: item.id, quantity: item.quantity - 1 })}
                               >
                                 <Minus className="h-3 w-3" />
                               </Button>
-                              
                               <span className="text-white font-semibold min-w-8 text-center">
                                 {item.quantity}
                               </span>
-                              
                               <Button
                                 size="sm"
                                 variant="outline"
                                 className="h-8 w-8 p-0 border-gold/30"
-                                onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
+                                onClick={() => updateCart({ id: item.id, quantity: item.quantity + 1 })}
                               >
                                 <Plus className="h-3 w-3" />
                               </Button>
                             </div>
-                            
                             <div className="flex items-center gap-2">
                               <span className="text-gold font-semibold">
                                 {formatPrice(parseFloat(item.product.price) * item.quantity)}
                               </span>
-                              
                               <Button
                                 size="sm"
                                 variant="ghost"
@@ -135,13 +119,13 @@ export const CartDrawer = () => {
                           </div>
                         </div>
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               )}
             </div>
 
-            {items.length > 0 && (
+            {cartItems.length > 0 && (
               <div className="border-t border-gold/20 p-6 bg-black/50">
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between text-sm">
@@ -159,7 +143,7 @@ export const CartDrawer = () => {
                     <span className="text-gold">{formatPrice(total)}</span>
                   </div>
                 </div>
-                
+
                 <Button
                   onClick={handleCheckout}
                   className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-semibold"

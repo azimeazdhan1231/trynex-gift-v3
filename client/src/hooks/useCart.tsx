@@ -1,12 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
-import { useCartStore } from '@/store/cartStore';
+import { useCartStore } from '@/lib/cart-store';
 import { getSessionId } from '@/utils/helpers';
 import type { CartItem } from '@/types';
 
 export const useCart = () => {
   const queryClient = useQueryClient();
-  const { setCart } = useCartStore();
+  const { items, addItem, removeItem, updateQuantity, clearCart: clearStoreCart } = useCartStore();
   const sessionId = getSessionId();
 
   const { data: cartItems = [], isLoading } = useQuery({
@@ -15,7 +15,6 @@ export const useCart = () => {
       const response = await fetch(`/api/cart/${sessionId}`);
       if (!response.ok) throw new Error('Failed to fetch cart');
       const items = await response.json();
-      setCart(items);
       return items;
     },
   });
@@ -28,8 +27,17 @@ export const useCart = () => {
       });
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['/api/cart', sessionId] });
+      // Add to local store as well
+      if (data.product) {
+        addItem({
+          id: data.product.id,
+          productId: data.productId,
+          customDesign: data.customDesign,
+          product: data.product
+        });
+      }
     },
   });
 
@@ -38,8 +46,9 @@ export const useCart = () => {
       const response = await apiRequest('PUT', `/api/cart/${id}`, { quantity });
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['/api/cart', sessionId] });
+      updateQuantity(variables.id, variables.quantity);
     },
   });
 
@@ -47,8 +56,9 @@ export const useCart = () => {
     mutationFn: async (id: number) => {
       await apiRequest('DELETE', `/api/cart/${id}`);
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['/api/cart', sessionId] });
+      removeItem(variables);
     },
   });
 
@@ -58,7 +68,7 @@ export const useCart = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/cart', sessionId] });
-      setCart([]);
+      clearStoreCart();
     },
   });
 
@@ -72,5 +82,7 @@ export const useCart = () => {
     isAddingToCart: addToCartMutation.isPending,
     isUpdating: updateCartMutation.isPending,
     isRemoving: removeFromCartMutation.isPending,
+    // Local store items for immediate UI updates
+    localItems: items,
   };
 };

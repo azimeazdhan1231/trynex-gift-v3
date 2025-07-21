@@ -59,10 +59,7 @@ export const ProductManagement = () => {
 
   const addProductMutation = useMutation({
     mutationFn: async (data: any) => {
-      return apiRequest('/api/products', {
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
+      return apiRequest('POST', '/api/products', data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/products'] });
@@ -84,10 +81,7 @@ export const ProductManagement = () => {
 
   const updateProductMutation = useMutation({
     mutationFn: async ({ id, data }: { id: number; data: any }) => {
-      return apiRequest(`/api/products/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify(data),
-      });
+      return apiRequest('PUT', `/api/products/${id}`, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/products'] });
@@ -109,9 +103,7 @@ export const ProductManagement = () => {
 
   const deleteProductMutation = useMutation({
     mutationFn: async (id: number) => {
-      return apiRequest(`/api/products/${id}`, {
-        method: 'DELETE',
-      });
+      return apiRequest('DELETE', `/api/products/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/products'] });
@@ -300,6 +292,89 @@ export const ProductManagement = () => {
                     onChange={(e) => setFormData({ ...formData, stockQuantity: parseInt(e.target.value) || 0 })}
                     className="bg-gray-800 border-gray-600"
                   />
+                </div>
+              </div>
+
+              {/* Image Management Section */}
+              <div>
+                <Label>Product Images</Label>
+                <div className="space-y-4 mt-2">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="imageUrl">Image URL</Label>
+                      <Input
+                        id="imageUrl"
+                        placeholder="https://example.com/image.jpg"
+                        className="bg-gray-800 border-gray-600"
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter') {
+                            const url = e.currentTarget.value;
+                            if (url && !formData.images.includes(url)) {
+                              setFormData({ 
+                                ...formData, 
+                                images: [...formData.images, url] 
+                              });
+                              e.currentTarget.value = '';
+                            }
+                          }
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="imageFile">Upload Image</Label>
+                      <Input
+                        id="imageFile"
+                        type="file"
+                        accept="image/*"
+                        className="bg-gray-800 border-gray-600"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            // For now, we'll use a placeholder URL
+                            // In production, you'd upload to a service like Cloudinary
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                              const result = e.target?.result as string;
+                              setFormData({ 
+                                ...formData, 
+                                images: [...formData.images, result] 
+                              });
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+                  
+                  {/* Image Preview */}
+                  {formData.images.length > 0 && (
+                    <div className="grid grid-cols-3 gap-2">
+                      {formData.images.map((image, index) => (
+                        <div key={index} className="relative">
+                          <img 
+                            src={image} 
+                            alt={`Product image ${index + 1}`}
+                            className="w-full h-20 object-cover rounded border"
+                          />
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="destructive"
+                            className="absolute -top-2 -right-2 h-6 w-6 p-0"
+                            onClick={() => {
+                              setFormData({
+                                ...formData,
+                                images: formData.images.filter((_, i) => i !== index)
+                              });
+                            }}
+                          >
+                            ×
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 
