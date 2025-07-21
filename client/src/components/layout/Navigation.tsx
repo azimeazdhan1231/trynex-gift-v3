@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { ShoppingCart, Menu, X, User, Package, Phone, Palette } from 'lucide-react';
-import { useCart } from '../../hooks/useCart';
+import { useCart } from '@/hooks/useCart';
 
 export function Navigation() {
   const [location] = useLocation();
@@ -58,17 +58,17 @@ export function Navigation() {
 
         {/* Cart & Admin */}
         <div className="flex items-center space-x-4">
-          <Link
-            href="/cart"
-            className="relative p-2 text-white hover:text-gold transition-colors group"
-          >
-            <ShoppingCart className="w-6 h-6" />
-            {itemCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-gold text-black text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
-                {itemCount}
-              </span>
-            )}
-          </Link>
+          <button
+              onClick={() => setIsOpen(true)}
+              className="relative p-2 text-white hover:text-gold transition-colors"
+            >
+              <ShoppingCart className="h-6 w-6" />
+              {itemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-gold text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {itemCount}
+                </span>
+              )}
+</button>
 
           <Link
             href="/admin"
@@ -95,14 +95,17 @@ export function Navigation() {
 
           <div className="flex items-center space-x-3">
             {/* Cart */}
-            <Link href="/cart" className="relative p-2 text-white">
-              <ShoppingCart className="w-6 h-6" />
+            <button
+              onClick={() => setIsOpen(true)}
+              className="relative p-2 text-white hover:text-gold transition-colors"
+            >
+              <ShoppingCart className="h-6 w-6" />
               {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-gold text-black text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                <span className="absolute -top-1 -right-1 bg-gold text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                   {itemCount}
                 </span>
               )}
-            </Link>
+</button>
 
             {/* Menu Button */}
             <button

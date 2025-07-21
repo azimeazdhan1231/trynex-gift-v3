@@ -1,4 +1,3 @@
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Route, Switch } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
@@ -33,7 +32,7 @@ function App() {
       <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black">
         <FloatingElements />
         <Navigation />
-        
+
         <main className="relative z-10">
           <Switch>
             <Route path="/" component={HomePage} />

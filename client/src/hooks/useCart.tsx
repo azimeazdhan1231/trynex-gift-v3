@@ -4,9 +4,11 @@ import { persist } from 'zustand/middleware';
 interface CartItem {
   id: number;
   name: string;
+  namebn?: string;
   price: number;
   quantity: number;
   image?: string;
+  images?: string[];
 }
 
 interface CartStore {
@@ -39,8 +41,17 @@ const useCartStore = create<CartStore>()(
             )
           });
         } else {
+          const cartItem = {
+            id: product.id,
+            name: product.name,
+            namebn: product.namebn,
+            price: product.price,
+            quantity: 1,
+            image: product.images?.[0] || product.image,
+            images: product.images
+          };
           set({
-            items: [...items, { ...product, quantity: 1 }]
+            items: [...items, cartItem]
           });
         }
       },

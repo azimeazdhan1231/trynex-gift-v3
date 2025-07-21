@@ -12,32 +12,27 @@ interface CartDrawerProps {
 
 export function CartDrawer({ isOpen, onClose, onCheckout }: CartDrawerProps) {
   const { 
-    cartItems, 
-    isLoading, 
-    updateCart, 
-    removeFromCart, 
+    items: cartItems, 
+    updateQuantity, 
+    removeItem, 
     clearCart,
-    isUpdating,
-    isRemoving 
+    total
   } = useCart();
 
   const calculateTotal = () => {
-    return cartItems.reduce((total, item) => {
-      const price = item.product?.price || 0;
-      return total + (price * item.quantity);
-    }, 0);
+    return total;
   };
 
   const handleQuantityChange = (itemId: number, newQuantity: number) => {
     if (newQuantity < 1) {
-      removeFromCart(itemId);
+      removeItem(itemId);
     } else {
-      updateCart({ id: itemId, quantity: newQuantity });
+      updateQuantity(itemId, newQuantity);
     }
   };
 
   const handleRemoveItem = (itemId: number) => {
-    removeFromCart(itemId);
+    removeItem(itemId);
   };
 
   const handleCheckout = () => {
@@ -84,11 +79,7 @@ export function CartDrawer({ isOpen, onClose, onCheckout }: CartDrawerProps) {
 
             {/* Content */}
             <div className="flex-1 overflow-hidden flex flex-col">
-              {isLoading ? (
-                <div className="flex-1 flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold"></div>
-                </div>
-              ) : cartItems.length === 0 ? (
+              {cartItems.length === 0 ? (
                 <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
                   <ShoppingCart className="h-16 w-16 text-gold/50 mb-4" />
                   <h3 className="text-xl font-semibold text-white mb-2">
@@ -116,10 +107,10 @@ export function CartDrawer({ isOpen, onClose, onCheckout }: CartDrawerProps) {
                         <div className="flex items-start space-x-3">
                           {/* Product Image */}
                           <div className="w-16 h-16 bg-gray-800 rounded-lg overflow-hidden flex-shrink-0">
-                            {item.product?.images?.[0] ? (
+                            {item.image ? (
                               <img
-                                src={item.product.images[0]}
-                                alt={item.product.name}
+                                src={item.image}
+                                alt={item.name}
                                 className="w-full h-full object-cover"
                               />
                             ) : (
@@ -132,28 +123,18 @@ export function CartDrawer({ isOpen, onClose, onCheckout }: CartDrawerProps) {
                           {/* Product Details */}
                           <div className="flex-1 min-w-0">
                             <h4 className="font-medium text-white text-sm">
-                              {item.product?.name || 'Product'}
+                              {item.name || 'Product'}
                             </h4>
                             <p className="text-gold font-semibold text-sm">
-                              ৳{item.product?.price || 0}
+                              ৳{item.price || 0}
                             </p>
                             
-                            {/* Custom Design Indicator */}
-                            {item.customDesign && (
-                              <div className="mt-1">
-                                <span className="text-xs bg-gold/20 text-gold px-2 py-1 rounded">
-                                  Custom Design
-                                </span>
-                              </div>
-                            )}
-
                             {/* Quantity Controls */}
                             <div className="flex items-center justify-between mt-2">
                               <div className="flex items-center space-x-2">
                                 <button
                                   onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                                  disabled={isUpdating}
-                                  className="p-1 hover:bg-gold/20 rounded disabled:opacity-50"
+                                  className="p-1 hover:bg-gold/20 rounded"
                                 >
                                   <Minus className="h-4 w-4 text-white" />
                                 </button>
@@ -162,8 +143,7 @@ export function CartDrawer({ isOpen, onClose, onCheckout }: CartDrawerProps) {
                                 </span>
                                 <button
                                   onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                                  disabled={isUpdating}
-                                  className="p-1 hover:bg-gold/20 rounded disabled:opacity-50"
+                                  className="p-1 hover:bg-gold/20 rounded"
                                 >
                                   <Plus className="h-4 w-4 text-white" />
                                 </button>
@@ -171,8 +151,7 @@ export function CartDrawer({ isOpen, onClose, onCheckout }: CartDrawerProps) {
 
                               <button
                                 onClick={() => handleRemoveItem(item.id)}
-                                disabled={isRemoving}
-                                className="p-1 hover:bg-red-600/20 rounded disabled:opacity-50"
+                                className="p-1 hover:bg-red-600/20 rounded"
                               >
                                 <Trash2 className="h-4 w-4 text-red-400" />
                               </button>
@@ -181,7 +160,7 @@ export function CartDrawer({ isOpen, onClose, onCheckout }: CartDrawerProps) {
                             {/* Item Total */}
                             <div className="mt-2 text-right">
                               <span className="text-gold font-semibold">
-                                ৳{((item.product?.price || 0) * item.quantity).toFixed(2)}
+                                ৳{((item.price || 0) * item.quantity).toFixed(2)}
                               </span>
                             </div>
                           </div>
