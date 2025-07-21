@@ -16,6 +16,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       res.json(products);
     } catch (error) {
+      console.error('Error in /api/products:', error);
       res.status(500).json({ error: "Failed to fetch products" });
     }
   });
@@ -29,115 +30,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       res.json(product);
     } catch (error) {
+      console.error('Error in /api/products/:id:', error);
       res.status(500).json({ error: "Failed to fetch product" });
-    }
-  });
-
-  // Categories routes
-  app.get("/api/categories", async (req, res) => {
-    try {
-      const categories = await storage.getCategories();
-      res.json(categories);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to fetch categories" });
-    }
-  });
-
-  // Cart routes
-  app.get("/api/cart/:sessionId", async (req, res) => {
-    try {
-      const { sessionId } = req.params;
-      const cartItems = await storage.getCartItems(sessionId);
-      res.json(cartItems);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to fetch cart items" });
-    }
-  });
-
-  app.post("/api/cart", async (req, res) => {
-    try {
-      const cartItem = await storage.addToCart(req.body);
-      res.json(cartItem);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to add to cart" });
-    }
-  });
-
-  app.put("/api/cart/:id", async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      const { quantity } = req.body;
-      const cartItem = await storage.updateCartItem(id, quantity);
-      if (!cartItem) {
-        return res.status(404).json({ error: "Cart item not found" });
-      }
-      res.json(cartItem);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to update cart item" });
-    }
-  });
-
-  app.delete("/api/cart/:id", async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      const success = await storage.removeFromCart(id);
-      if (!success) {
-        return res.status(404).json({ error: "Cart item not found" });
-      }
-      res.json({ success: true });
-    } catch (error) {
-      res.status(500).json({ error: "Failed to remove cart item" });
-    }
-  });
-
-  // Orders routes
-  app.get("/api/orders", async (req, res) => {
-    try {
-      const orders = await storage.getOrders();
-      res.json(orders);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to fetch orders" });
-    }
-  });
-
-  app.get("/api/orders/:id", async (req, res) => {
-    try {
-      const { id } = req.params;
-      const order = await storage.getOrder(id);
-      if (!order) {
-        return res.status(404).json({ error: "Order not found" });
-      }
-      res.json(order);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to fetch order" });
-    }
-  });
-
-  app.post("/api/orders", async (req, res) => {
-    try {
-      const order = await storage.createOrder(req.body);
-      res.json(order);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to create order" });
-    }
-  });
-
-  // Contact messages routes
-  app.get("/api/contact-messages", async (req, res) => {
-    try {
-      const messages = await storage.getContactMessages();
-      res.json(messages);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to fetch contact messages" });
-    }
-  });
-
-  app.post("/api/contact-messages", async (req, res) => {
-    try {
-      const message = await storage.createContactMessage(req.body);
-      res.json(message);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to create contact message" });
     }
   });
 
@@ -150,6 +44,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ error: error.errors });
       }
+      console.error('Error creating product:', error);
       res.status(500).json({ error: "Failed to create product" });
     }
   });
@@ -164,6 +59,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       res.json(product);
     } catch (error) {
+      console.error('Error updating product:', error);
       res.status(500).json({ error: "Failed to update product" });
     }
   });
@@ -177,6 +73,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       res.status(204).send();
     } catch (error) {
+      console.error('Error deleting product:', error);
       res.status(500).json({ error: "Failed to delete product" });
     }
   });
@@ -187,6 +84,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const categories = await storage.getCategories();
       res.json(categories);
     } catch (error) {
+      console.error('Error fetching categories:', error);
       res.status(500).json({ error: "Failed to fetch categories" });
     }
   });
@@ -200,6 +98,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ error: error.errors });
       }
+      console.error('Error creating category:', error);
       res.status(500).json({ error: "Failed to create category" });
     }
   });
@@ -211,15 +110,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const cartItems = await storage.getCartItems(sessionId);
       res.json(cartItems);
     } catch (error) {
+      console.error('Error fetching cart items:', error);
       res.status(500).json({ error: "Failed to fetch cart items" });
     }
   });
 
   app.post("/api/cart", async (req, res) => {
     try {
+      console.log('Cart POST request body:', req.body);
       const cartItem = await storage.addToCart(req.body);
       res.status(201).json(cartItem);
     } catch (error) {
+      console.error('Error adding to cart:', error);
       res.status(500).json({ error: "Failed to add item to cart" });
     }
   });
@@ -234,6 +136,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       res.json(cartItem);
     } catch (error) {
+      console.error('Error updating cart item:', error);
       res.status(500).json({ error: "Failed to update cart item" });
     }
   });
@@ -247,6 +150,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       res.status(204).send();
     } catch (error) {
+      console.error('Error removing cart item:', error);
       res.status(500).json({ error: "Failed to remove cart item" });
     }
   });
@@ -257,6 +161,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.clearCart(sessionId);
       res.status(204).send();
     } catch (error) {
+      console.error('Error clearing cart:', error);
       res.status(500).json({ error: "Failed to clear cart" });
     }
   });
@@ -272,6 +177,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       res.json(orders);
     } catch (error) {
+      console.error('Error fetching orders:', error);
       res.status(500).json({ error: "Failed to fetch orders" });
     }
   });
@@ -285,6 +191,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       res.json(order);
     } catch (error) {
+      console.error('Error fetching order:', error);
       res.status(500).json({ error: "Failed to fetch order" });
     }
   });
@@ -298,6 +205,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ error: error.errors });
       }
+      console.error('Error creating order:', error);
       res.status(500).json({ error: "Failed to create order" });
     }
   });
@@ -312,6 +220,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       res.json(order);
     } catch (error) {
+      console.error('Error updating order status:', error);
       res.status(500).json({ error: "Failed to update order status" });
     }
   });
@@ -326,6 +235,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       res.json(order);
     } catch (error) {
+      console.error('Error updating payment status:', error);
       res.status(500).json({ error: "Failed to update payment status" });
     }
   });
@@ -336,6 +246,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const messages = await storage.getContactMessages();
       res.json(messages);
     } catch (error) {
+      console.error('Error fetching contact messages:', error);
       res.status(500).json({ error: "Failed to fetch contact messages" });
     }
   });
@@ -349,6 +260,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ error: error.errors });
       }
+      console.error('Error creating contact message:', error);
       res.status(500).json({ error: "Failed to create contact message" });
     }
   });
@@ -360,6 +272,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const designs = await storage.getCustomDesignsBySession(sessionId);
       res.json(designs);
     } catch (error) {
+      console.error('Error fetching custom designs:', error);
       res.status(500).json({ error: "Failed to fetch custom designs" });
     }
   });
@@ -369,6 +282,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const design = await storage.createCustomDesign(req.body);
       res.status(201).json(design);
     } catch (error) {
+      console.error('Error creating custom design:', error);
       res.status(500).json({ error: "Failed to create custom design" });
     }
   });
@@ -382,6 +296,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       res.json(design);
     } catch (error) {
+      console.error('Error updating custom design:', error);
       res.status(500).json({ error: "Failed to update custom design" });
     }
   });
@@ -393,6 +308,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const promos = await storage.getPromos(active === 'true');
       res.json(promos);
     } catch (error) {
+      console.error('Error fetching promos:', error);
       res.status(500).json({ error: "Failed to fetch promos" });
     }
   });
@@ -406,6 +322,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       res.json(promo);
     } catch (error) {
+      console.error('Error fetching promo:', error);
       res.status(500).json({ error: "Failed to fetch promo" });
     }
   });
@@ -415,6 +332,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const promo = await storage.createPromo(req.body);
       res.status(201).json(promo);
     } catch (error) {
+      console.error('Error creating promo:', error);
       res.status(500).json({ error: "Failed to create promo" });
     }
   });
@@ -422,4 +340,3 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
   return httpServer;
 }
-// Applying database connection and queries fixes.

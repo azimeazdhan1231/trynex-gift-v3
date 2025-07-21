@@ -1,3 +1,4 @@
+
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { products, categories, orders, cartItems, contactMessages, customDesigns, promos } from "@shared/schema";
@@ -78,6 +79,10 @@ export const storage = {
     }
   },
 
+  async getProduct(id: number) {
+    return this.getProductById(id);
+  },
+
   async searchProducts(query: string) {
     try {
       return await db.select().from(products)
@@ -110,6 +115,29 @@ export const storage = {
     } catch (error) {
       console.error('Error creating product:', error);
       throw error;
+    }
+  },
+
+  async updateProduct(id: number, updates: Partial<InsertProduct>) {
+    try {
+      const [product] = await db.update(products)
+        .set({ ...updates, updatedAt: new Date() })
+        .where(eq(products.id, id))
+        .returning();
+      return product;
+    } catch (error) {
+      console.error('Error updating product:', error);
+      throw error;
+    }
+  },
+
+  async deleteProduct(id: number) {
+    try {
+      await db.delete(products).where(eq(products.id, id));
+      return true;
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      return false;
     }
   },
 
@@ -170,6 +198,16 @@ export const storage = {
     }
   },
 
+  async getOrder(id: string) {
+    try {
+      const [order] = await db.select().from(orders).where(eq(orders.orderId, id));
+      return order;
+    } catch (error) {
+      console.error('Error fetching order:', error);
+      throw error;
+    }
+  },
+
   async getOrders(filters?: {
     status?: string;
     dateFrom?: Date;
@@ -199,6 +237,32 @@ export const storage = {
     }
   },
 
+  async updateOrderStatus(orderId: string, status: string) {
+    try {
+      const [order] = await db.update(orders)
+        .set({ orderStatus: status, updatedAt: new Date() })
+        .where(eq(orders.orderId, orderId))
+        .returning();
+      return order;
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      throw error;
+    }
+  },
+
+  async updatePaymentStatus(orderId: string, status: string) {
+    try {
+      const [order] = await db.update(orders)
+        .set({ paymentStatus: status, updatedAt: new Date() })
+        .where(eq(orders.orderId, orderId))
+        .returning();
+      return order;
+    } catch (error) {
+      console.error('Error updating payment status:', error);
+      throw error;
+    }
+  },
+
   // Contact Messages
   async createContactMessage(messageData: InsertContactMessage) {
     try {
@@ -213,6 +277,15 @@ export const storage = {
     }
   },
 
+  async getContactMessages() {
+    try {
+      return await db.select().from(contactMessages).orderBy(desc(contactMessages.createdAt));
+    } catch (error) {
+      console.error('Error fetching contact messages:', error);
+      throw error;
+    }
+  },
+
   // Cart Items
   async getCartItems(sessionId: string) {
     try {
@@ -223,13 +296,19 @@ export const storage = {
     }
   },
 
-  async addToCart(sessionId: string, productId: number, quantity: number = 1, customDesign?: any) {
+  async addToCart(cartData: {
+    sessionId: string;
+    productId: number;
+    quantity: number;
+    customDesign?: any;
+  }) {
     try {
+      console.log('Adding to cart:', cartData);
       const [cartItem] = await db.insert(cartItems).values({
-        sessionId,
-        productId,
-        quantity,
-        customDesign,
+        sessionId: cartData.sessionId,
+        productId: cartData.productId,
+        quantity: cartData.quantity || 1,
+        customDesign: cartData.customDesign,
         createdAt: new Date(),
       }).returning();
       return cartItem;
@@ -255,9 +334,10 @@ export const storage = {
   async removeFromCart(id: number) {
     try {
       await db.delete(cartItems).where(eq(cartItems.id, id));
+      return true;
     } catch (error) {
       console.error('Error removing from cart:', error);
-      throw error;
+      return false;
     }
   },
 
@@ -294,6 +374,41 @@ export const storage = {
     }
   },
 
+  async getCustomDesignsBySession(sessionId: string) {
+    try {
+      return await db.select().from(customDesigns).where(eq(customDesigns.sessionId, sessionId));
+    } catch (error) {
+      console.error('Error fetching custom designs by session:', error);
+      throw error;
+    }
+  },
+
+  async createCustomDesign(designData: any) {
+    try {
+      const [design] = await db.insert(customDesigns).values({
+        ...designData,
+        createdAt: new Date(),
+      }).returning();
+      return design;
+    } catch (error) {
+      console.error('Error creating custom design:', error);
+      throw error;
+    }
+  },
+
+  async updateCustomDesign(id: number, updates: any) {
+    try {
+      const [design] = await db.update(customDesigns)
+        .set(updates)
+        .where(eq(customDesigns.id, id))
+        .returning();
+      return design;
+    } catch (error) {
+      console.error('Error updating custom design:', error);
+      throw error;
+    }
+  },
+
   // Promos
   async getActivePromos() {
     try {
@@ -310,6 +425,36 @@ export const storage = {
       return promo;
     } catch (error) {
       console.error('Error fetching promo by code:', error);
+      throw error;
+    }
+  },
+
+  async getPromos(activeOnly: boolean = false) {
+    try {
+      let query = db.select().from(promos);
+      if (activeOnly) {
+        query = query.where(eq(promos.isActive, true));
+      }
+      return await query.orderBy(desc(promos.createdAt));
+    } catch (error) {
+      console.error('Error fetching promos:', error);
+      throw error;
+    }
+  },
+
+  async getPromo(code: string) {
+    return this.getPromoByCode(code);
+  },
+
+  async createPromo(promoData: any) {
+    try {
+      const [promo] = await db.insert(promos).values({
+        ...promoData,
+        createdAt: new Date(),
+      }).returning();
+      return promo;
+    } catch (error) {
+      console.error('Error creating promo:', error);
       throw error;
     }
   }
