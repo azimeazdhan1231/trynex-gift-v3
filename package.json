@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "tsx watch server/index.ts",
-    "build": "vite build --outDir dist/client",
+    "build": "vite build",
     "build:server": "tsc server/index.ts --outDir dist/server --moduleResolution node --esModuleInterop --allowSyntheticDefaultImports --target es2020",
     "start": "node dist/server/index.js",
     "db:generate": "drizzle-kit generate",
