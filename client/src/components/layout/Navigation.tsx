@@ -6,6 +6,7 @@ import { useCart } from '@/hooks/useCart';
 export function Navigation() {
   const [location] = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const { itemCount } = useCart();
 
   const navItems = [
@@ -59,7 +60,7 @@ export function Navigation() {
         {/* Cart & Admin */}
         <div className="flex items-center space-x-4">
           <button
-              onClick={() => setIsOpen(true)}
+              onClick={() => setIsCartOpen(true)}
               className="relative p-2 text-white hover:text-gold transition-colors"
             >
               <ShoppingCart className="h-6 w-6" />
@@ -68,7 +69,7 @@ export function Navigation() {
                   {itemCount}
                 </span>
               )}
-</button>
+            </button>
 
           <Link
             href="/admin"
@@ -96,7 +97,7 @@ export function Navigation() {
           <div className="flex items-center space-x-3">
             {/* Cart */}
             <button
-              onClick={() => setIsOpen(true)}
+              onClick={() => setIsCartOpen(true)}
               className="relative p-2 text-white hover:text-gold transition-colors"
             >
               <ShoppingCart className="h-6 w-6" />
@@ -105,7 +106,7 @@ export function Navigation() {
                   {itemCount}
                 </span>
               )}
-</button>
+            </button>
 
             {/* Menu Button */}
             <button

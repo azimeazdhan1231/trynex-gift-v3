@@ -1,8 +1,8 @@
 
-import { useState } from 'react';
-import { X, Plus, Minus, ShoppingCart, Trash2 } from 'lucide-react';
-import { useCart } from '@/hooks/useCart';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ShoppingCart, X, Plus, Minus, Trash2 } from 'lucide-react';
+import { useCart } from '@/hooks/useCart';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -114,7 +114,7 @@ export function CartDrawer({ isOpen, onClose, onCheckout }: CartDrawerProps) {
                                 className="w-full h-full object-cover"
                               />
                             ) : (
-                              <div className="w-full h-full flex items-center justify-center">
+                              <div className="w-full h-full bg-gray-700 flex items-center justify-center">
                                 <ShoppingCart className="h-6 w-6 text-gray-500" />
                               </div>
                             )}
@@ -122,48 +122,57 @@ export function CartDrawer({ isOpen, onClose, onCheckout }: CartDrawerProps) {
 
                           {/* Product Details */}
                           <div className="flex-1 min-w-0">
-                            <h4 className="font-medium text-white text-sm">
-                              {item.name || 'Product'}
+                            <h4 className="text-white font-medium truncate">
+                              {item.name}
                             </h4>
-                            <p className="text-gold font-semibold text-sm">
-                              ৳{item.price || 0}
+                            <p className="text-gold font-semibold">
+                              ৳{item.price}
                             </p>
-                            
-                            {/* Quantity Controls */}
-                            <div className="flex items-center justify-between mt-2">
-                              <div className="flex items-center space-x-2">
-                                <button
-                                  onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                                  className="p-1 hover:bg-gold/20 rounded"
-                                >
-                                  <Minus className="h-4 w-4 text-white" />
-                                </button>
-                                <span className="text-white font-medium min-w-[2rem] text-center">
-                                  {item.quantity}
-                                </span>
-                                <button
-                                  onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                                  className="p-1 hover:bg-gold/20 rounded"
-                                >
-                                  <Plus className="h-4 w-4 text-white" />
-                                </button>
-                              </div>
+                            {item.size && (
+                              <p className="text-gray-400 text-sm">Size: {item.size}</p>
+                            )}
+                            {item.color && (
+                              <p className="text-gray-400 text-sm">Color: {item.color}</p>
+                            )}
+                          </div>
 
+                          {/* Quantity Controls */}
+                          <div className="flex flex-col items-end space-y-2">
+                            <button
+                              onClick={() => handleRemoveItem(item.id)}
+                              className="text-red-400 hover:text-red-300 transition-colors"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                            
+                            <div className="flex items-center space-x-2">
                               <button
-                                onClick={() => handleRemoveItem(item.id)}
-                                className="p-1 hover:bg-red-600/20 rounded"
+                                onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                                className="w-8 h-8 bg-gray-800 hover:bg-gray-700 rounded flex items-center justify-center text-white transition-colors"
                               >
-                                <Trash2 className="h-4 w-4 text-red-400" />
+                                <Minus className="h-4 w-4" />
+                              </button>
+                              
+                              <span className="text-white font-medium min-w-[2rem] text-center">
+                                {item.quantity}
+                              </span>
+                              
+                              <button
+                                onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                                className="w-8 h-8 bg-gray-800 hover:bg-gray-700 rounded flex items-center justify-center text-white transition-colors"
+                              >
+                                <Plus className="h-4 w-4" />
                               </button>
                             </div>
-
-                            {/* Item Total */}
-                            <div className="mt-2 text-right">
-                              <span className="text-gold font-semibold">
-                                ৳{((item.price || 0) * item.quantity).toFixed(2)}
-                              </span>
-                            </div>
                           </div>
+                        </div>
+
+                        {/* Item Total */}
+                        <div className="mt-3 pt-3 border-t border-gray-700 flex justify-between items-center">
+                          <span className="text-gray-400">Subtotal:</span>
+                          <span className="text-gold font-semibold">
+                            ৳{(item.price * item.quantity).toFixed(2)}
+                          </span>
                         </div>
                       </div>
                     ))}
@@ -172,11 +181,9 @@ export function CartDrawer({ isOpen, onClose, onCheckout }: CartDrawerProps) {
                   {/* Footer */}
                   <div className="border-t border-gold/20 p-4 space-y-4">
                     {/* Total */}
-                    <div className="flex items-center justify-between">
-                      <span className="text-lg font-semibold text-white">Total:</span>
-                      <span className="text-xl font-bold text-gold">
-                        ৳{calculateTotal().toFixed(2)}
-                      </span>
+                    <div className="flex justify-between items-center text-lg">
+                      <span className="text-white font-semibold">Total:</span>
+                      <span className="text-gold font-bold">৳{calculateTotal().toFixed(2)}</span>
                     </div>
 
                     {/* Actions */}

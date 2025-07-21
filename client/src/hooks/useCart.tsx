@@ -4,85 +4,67 @@ import { persist } from 'zustand/middleware';
 interface CartItem {
   id: number;
   name: string;
-  namebn?: string;
   price: number;
   quantity: number;
   image?: string;
-  images?: string[];
+  size?: string;
+  color?: string;
 }
 
 interface CartStore {
   items: CartItem[];
-  isOpen: boolean;
-  addItem: (product: any) => void;
-  removeItem: (id: number) => void;
-  updateQuantity: (id: number, quantity: number) => void;
-  clearCart: () => void;
-  setIsOpen: (open: boolean) => void;
-  total: number;
   itemCount: number;
+  total: number;
+  addItem: (product: Omit<CartItem, 'quantity'>) => void;
+  updateQuantity: (id: number, quantity: number) => void;
+  removeItem: (id: number) => void;
+  clearCart: () => void;
 }
 
 const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
       items: [],
-      isOpen: false,
-      addItem: (product) => {
-        const items = get().items;
-        const existingItem = items.find(item => item.id === product.id);
+      itemCount: 0,
+      total: 0,
+      addItem: (product) => set((state) => {
+        const existingItem = state.items.find(item => item.id === product.id);
+        let newItems;
 
         if (existingItem) {
-          set({
-            items: items.map(item =>
-              item.id === product.id
-                ? { ...item, quantity: item.quantity + 1 }
-                : item
-            )
-          });
+          newItems = state.items.map(item =>
+            item.id === product.id
+              ? { ...item, quantity: item.quantity + 1 }
+              : item
+          );
         } else {
-          const cartItem = {
-            id: product.id,
-            name: product.name,
-            namebn: product.namebn,
-            price: product.price,
-            quantity: 1,
-            image: product.images?.[0] || product.image,
-            images: product.images
-          };
-          set({
-            items: [...items, cartItem]
-          });
+          newItems = [...state.items, { ...product, quantity: 1 }];
         }
-      },
-      removeItem: (id) => {
-        set({
-          items: get().items.filter(item => item.id !== id)
-        });
-      },
-      updateQuantity: (id, quantity) => {
-        if (quantity <= 0) {
-          get().removeItem(id);
-          return;
-        }
-        set({
-          items: get().items.map(item =>
-            item.id === id ? { ...item, quantity } : item
-          )
-        });
-      },
-      clearCart: () => {
-        set({ items: [] });
-      },
-      setIsOpen: (isOpen) => {
-        set({ isOpen });
-      },
-      get total() {
-        return get().items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      },
-      get itemCount() {
-        return get().items.reduce((sum, item) => sum + item.quantity, 0);
-      }
+
+        const itemCount = newItems.reduce((sum, item) => sum + item.quantity, 0);
+        const total = newItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+        return { items: newItems, itemCount, total };
+      }),
+      updateQuantity: (id, quantity) => set((state) => {
+        const newItems = state.items.map(item =>
+          item.id === id ? { ...item, quantity } : item
+        );
+
+        const itemCount = newItems.reduce((sum, item) => sum + item.quantity, 0);
+        const total = newItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+        return { items: newItems, itemCount, total };
+      }),
+      removeItem: (id) => set((state) => {
+        const newItems = state.items.filter(item => item.id !== id);
+
+        const itemCount = newItems.reduce((sum, item) => sum + item.quantity, 0);
+        const total = newItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+        return { items: newItems, itemCount, total };
+      }),
+      clearCart: () => set({ items: [], itemCount: 0, total: 0 }),
     }),
     {
       name: 'cart-storage',
@@ -92,15 +74,15 @@ const useCartStore = create<CartStore>()(
 
 export const useCart = () => {
   const store = useCartStore();
+
   return {
     items: store.items,
-    addItem: store.addItem,
-    removeItem: store.removeItem,
-    updateQuantity: store.updateQuantity,
-    clearCart: store.clearCart,
-    isOpen: store.isOpen,
-    setIsOpen: store.setIsOpen,
+    itemCount: store.itemCount,
     total: store.total,
-    itemCount: store.itemCount
+    addItem: store.addItem,
+    updateQuantity: store.updateQuantity,
+    removeItem: store.removeItem,
+    clearCart: store.clearCart,
+    addToCart: store.addItem, // Alias for addToCart
   };
 };
