@@ -121,7 +121,8 @@ async function seed() {
   }
 }
 
-if (require.main === module) {
+// Check if this file is being run directly
+if (import.meta.url === `file://${process.argv[1]}`) {
   seed();
 }
 
