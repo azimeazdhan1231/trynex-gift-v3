@@ -48,14 +48,3 @@ export const DELIVERY_ZONES = {
   dhaka: { fee: 70, freeAbove: 1500 },
   outside: { fee: 120, freeAbove: 1500 }
 };
-
-export const CUSTOMIZABLE_PRODUCTS = [
-  "T-Shirt",
-  "Hoodie", 
-  "Coffee Mug",
-  "Canvas Print",
-  "Phone Case",
-  "Notebook",
-  "Pillow",
-  "Water Bottle"
-];
