@@ -1,4 +1,5 @@
 
+
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { products, categories, orders, cartItems, contactMessages, customDesigns, promos } from "@shared/schema";
@@ -120,8 +121,11 @@ export const storage = {
 
   async updateProduct(id: number, updates: Partial<InsertProduct>) {
     try {
+      // Remove updatedAt from updates to avoid conflicts and add it manually
+      const { updatedAt, createdAt, ...cleanUpdates } = updates as any;
+      
       const [product] = await db.update(products)
-        .set({ ...updates, updatedAt: new Date() })
+        .set({ ...cleanUpdates, updatedAt: new Date() })
         .where(eq(products.id, id))
         .returning();
       return product;
@@ -286,10 +290,40 @@ export const storage = {
     }
   },
 
-  // Cart Items
+  // Cart Items with Product Details
   async getCartItems(sessionId: string) {
     try {
-      return await db.select().from(cartItems).where(eq(cartItems.sessionId, sessionId));
+      const result = await db
+        .select({
+          id: cartItems.id,
+          sessionId: cartItems.sessionId,
+          productId: cartItems.productId,
+          quantity: cartItems.quantity,
+          customDesign: cartItems.customDesign,
+          createdAt: cartItems.createdAt,
+          product: {
+            id: products.id,
+            name: products.name,
+            namebn: products.namebn,
+            price: products.price,
+            originalPrice: products.originalPrice,
+            category: products.category,
+            description: products.description,
+            descriptionbn: products.descriptionbn,
+            images: products.images,
+            isCustomizable: products.isCustomizable,
+            isFeatured: products.isFeatured,
+            inStock: products.inStock,
+            stockQuantity: products.stockQuantity
+          }
+        })
+        .from(cartItems)
+        .leftJoin(products, eq(cartItems.productId, products.id))
+        .where(eq(cartItems.sessionId, sessionId))
+        .orderBy(desc(cartItems.createdAt));
+
+      console.log(`Found ${result.length} cart items for session ${sessionId}`);
+      return result;
     } catch (error) {
       console.error('Error fetching cart items:', error);
       throw error;
@@ -304,14 +338,46 @@ export const storage = {
   }) {
     try {
       console.log('Adding to cart:', cartData);
-      const [cartItem] = await db.insert(cartItems).values({
-        sessionId: cartData.sessionId,
-        productId: cartData.productId,
-        quantity: cartData.quantity || 1,
-        customDesign: cartData.customDesign,
-        createdAt: new Date(),
-      }).returning();
-      return cartItem;
+      
+      // Check if item already exists in cart
+      const existingItem = await db
+        .select()
+        .from(cartItems)
+        .where(
+          and(
+            eq(cartItems.sessionId, cartData.sessionId),
+            eq(cartItems.productId, cartData.productId)
+          )
+        )
+        .limit(1);
+
+      if (existingItem.length > 0) {
+        // Update quantity instead of adding new item
+        const [updatedItem] = await db
+          .update(cartItems)
+          .set({ 
+            quantity: existingItem[0].quantity + (cartData.quantity || 1)
+          })
+          .where(eq(cartItems.id, existingItem[0].id))
+          .returning();
+
+        // Get product details
+        const product = await this.getProductById(cartData.productId);
+        return { ...updatedItem, product };
+      } else {
+        // Add new item to cart
+        const [cartItem] = await db.insert(cartItems).values({
+          sessionId: cartData.sessionId,
+          productId: cartData.productId,
+          quantity: cartData.quantity || 1,
+          customDesign: cartData.customDesign,
+          createdAt: new Date(),
+        }).returning();
+
+        // Get product details
+        const product = await this.getProductById(cartData.productId);
+        return { ...cartItem, product };
+      }
     } catch (error) {
       console.error('Error adding to cart:', error);
       throw error;
@@ -324,6 +390,12 @@ export const storage = {
         .set({ quantity })
         .where(eq(cartItems.id, id))
         .returning();
+      
+      if (cartItem) {
+        const product = await this.getProductById(cartItem.productId);
+        return { ...cartItem, product };
+      }
+      
       return cartItem;
     } catch (error) {
       console.error('Error updating cart item:', error);

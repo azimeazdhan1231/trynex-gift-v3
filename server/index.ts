@@ -1,63 +1,46 @@
-import express, { type Request, Response, NextFunction } from "express";
+import express from "express";
 import { registerRoutes } from "./routes";
-import { setupVite, serveStatic } from "./vite";
-import { initializeDatabase } from "./init-db";
+import { setupVite } from "./vite";
+import { storage } from "./storage";
 
 const app = express();
+const PORT = process.env.PORT || 5000;
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.static("dist"));
 
-app.use((req, res, next) => {
-  const start = Date.now();
-  const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
-
-  const originalResJson = res.json;
-  res.json = function (bodyObj, ...args) {
-    capturedJsonResponse = bodyObj;
-    return originalResJson.apply(res, [bodyObj, ...args]);
-  };
-
-  res.on("finish", () => {
-    const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse).slice(0, 100)}`;
-      }
-
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
-      }
-
-      console.log(logLine);
-    }
-  });
-
-  next();
-});
-
-(async () => {
-  // Initialize database first
-  const dbInitialized = await initializeDatabase();
-  if (!dbInitialized) {
-    console.error('Failed to initialize database. Exiting...');
+async function initializeDatabase() {
+  try {
+    console.log("Initializing database...");
+    const products = await storage.getProducts();
+    console.log(`Database connected. Found ${products.length} products.`);
+  } catch (error) {
+    console.error("Database connection failed:", error);
     process.exit(1);
   }
+}
 
-  const server = await registerRoutes(app);
+async function startServer() {
+  // Initialize database first
+  await initializeDatabase();
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the API routes
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
+  // Register API routes
+  const httpServer = await registerRoutes(app);
+
+  // Setup Vite in development or serve static files in production
+  if (process.env.NODE_ENV !== "production") {
+    await setupVite(app, httpServer);
   } else {
-    serveStatic(app);
+    app.get('*', (req, res) => {
+      res.sendFile('index.html', { root: 'dist/client' });
+    });
   }
 
-  const PORT = parseInt(process.env.PORT || "5000", 10);
-  server.listen(PORT, "0.0.0.0", () => {
+  // Start server on all interfaces for deployment
+  httpServer.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
   });
-})();
+}
+
+startServer().catch(console.error);
