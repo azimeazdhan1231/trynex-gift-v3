@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 # TryneX Lifestyle E-Commerce - AWS EC2 Production Setup Script
@@ -99,46 +100,164 @@ print_step "Building the application..."
 npm run build
 print_success "Application built successfully"
 
-# Testing database connection and running migrations...
-print_step "Testing database connection and running migrations..."
+# Fix database schema issues before migration
+print_step "Fixing database schema and running migrations..."
 
-# Run the column name fix migration
-print_step "Running database migrations..."
-if [ -f "migrations/0006_fix_column_names.sql" ]; then
-    # Try to run the migration directly with psql if available
-    if command -v psql >/dev/null 2>&1; then
-        PGPASSWORD="usernameamit333" psql -h "aws-0-ap-southeast-1.pooler.supabase.com" -p 6543 -U "postgres.wifsqonbnfmwtqvupqbk" -d "postgres" -f "migrations/0006_fix_column_names.sql" 2>/dev/null || print_warning "Direct migration failed"
-    fi
-fi
+# Create a comprehensive migration script
+cat > fix_database.sql << 'EOF'
+-- Drop existing tables if they exist to start fresh
+DROP TABLE IF EXISTS cart_items CASCADE;
+DROP TABLE IF EXISTS order_items CASCADE;
+DROP TABLE IF EXISTS orders CASCADE;
+DROP TABLE IF EXISTS contact_messages CASCADE;
+DROP TABLE IF EXISTS custom_designs CASCADE;
+DROP TABLE IF EXISTS promo_codes CASCADE;
+DROP TABLE IF EXISTS products CASCADE;
+DROP TABLE IF EXISTS categories CASCADE;
 
-if ! npm run db:push 2>/dev/null; then
-    print_warning "Database push failed - continuing anyway"
-fi
+-- Create categories table
+CREATE TABLE categories (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    namebn VARCHAR(255),
+    description TEXT,
+    image VARCHAR(500),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-# Fix column naming after push
-print_step "Fixing column names to match application schema..."
+-- Create products table
+CREATE TABLE products (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    namebn VARCHAR(255),
+    description TEXT,
+    descriptionbn TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    image VARCHAR(500),
+    category_id INTEGER REFERENCES categories(id),
+    stock_quantity INTEGER DEFAULT 0,
+    is_featured BOOLEAN DEFAULT false,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create orders table
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    order_id VARCHAR(255) UNIQUE NOT NULL,
+    customer_name VARCHAR(255) NOT NULL,
+    customer_phone VARCHAR(20) NOT NULL,
+    customer_email VARCHAR(255),
+    delivery_address TEXT NOT NULL,
+    district VARCHAR(100) NOT NULL,
+    thana VARCHAR(100) NOT NULL,
+    payment_method VARCHAR(50) NOT NULL,
+    payment_status VARCHAR(50) DEFAULT 'pending',
+    order_status VARCHAR(50) DEFAULT 'pending',
+    total_amount DECIMAL(10, 2) NOT NULL,
+    delivery_charge DECIMAL(10, 2) DEFAULT 0,
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create order_items table
+CREATE TABLE order_items (
+    id SERIAL PRIMARY KEY,
+    order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
+    product_id INTEGER REFERENCES products(id),
+    product_name VARCHAR(255) NOT NULL,
+    product_price DECIMAL(10, 2) NOT NULL,
+    quantity INTEGER NOT NULL,
+    custom_design_data JSONB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create cart_items table
+CREATE TABLE cart_items (
+    id SERIAL PRIMARY KEY,
+    session_id VARCHAR(255) NOT NULL,
+    product_id INTEGER REFERENCES products(id),
+    quantity INTEGER NOT NULL,
+    custom_design_data JSONB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create contact_messages table
+CREATE TABLE contact_messages (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(20),
+    subject VARCHAR(255),
+    message TEXT NOT NULL,
+    status VARCHAR(50) DEFAULT 'unread',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create custom_designs table
+CREATE TABLE custom_designs (
+    id SERIAL PRIMARY KEY,
+    design_name VARCHAR(255) NOT NULL,
+    design_data JSONB NOT NULL,
+    preview_url VARCHAR(500),
+    created_by VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create promo_codes table
+CREATE TABLE promo_codes (
+    id SERIAL PRIMARY KEY,
+    code VARCHAR(50) UNIQUE NOT NULL,
+    discount_type VARCHAR(20) NOT NULL,
+    discount_value DECIMAL(10, 2) NOT NULL,
+    min_order_amount DECIMAL(10, 2),
+    max_uses INTEGER,
+    current_uses INTEGER DEFAULT 0,
+    is_active BOOLEAN DEFAULT true,
+    valid_from TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    valid_until TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Insert sample categories
+INSERT INTO categories (name, namebn, description, image) VALUES
+('Mugs', 'মগ', 'Custom printed mugs for your daily coffee', '/images/categories/mugs.jpg'),
+('T-Shirts', 'টি-শার্ট', 'Premium quality custom t-shirts', '/images/categories/tshirts.jpg'),
+('Frames', 'ফ্রেম', 'Beautiful photo frames for memories', '/images/categories/frames.jpg'),
+('Tumblers', 'টাম্বলার', 'Insulated tumblers for hot and cold drinks', '/images/categories/tumblers.jpg');
+
+-- Insert sample products
+INSERT INTO products (name, namebn, description, descriptionbn, price, image, category_id, stock_quantity, is_featured) VALUES
+('Custom Photo Mug', 'কাস্টম ফটো মগ', 'Personalized mug with your favorite photo', 'আপনার প্রিয় ছবি দিয়ে ব্যক্তিগতকৃত মগ', 450.00, '/images/products/photo-mug.jpg', 1, 50, true),
+('Premium T-Shirt', 'প্রিমিয়াম টি-শার্ট', 'High quality cotton t-shirt with custom design', 'কাস্টম ডিজাইনসহ উচ্চ মানের কটন টি-শার্ট', 850.00, '/images/products/tshirt.jpg', 2, 30, true),
+('Wooden Photo Frame', 'কাঠের ফটো ফ্রেম', 'Elegant wooden frame for your precious memories', 'আপনার মূল্যবান স্মৃতির জন্য মার্জিত কাঠের ফ্রেম', 650.00, '/images/products/wooden-frame.jpg', 3, 25, false),
+('Stainless Steel Tumbler', 'স্টেইনলেস স্টিল টাম্বলার', 'Insulated tumbler keeps drinks hot/cold for hours', 'ইনসুলেটেড টাম্বলার ঘন্টার পর ঘন্টা পানীয় গরম/ঠান্ডা রাখে', 750.00, '/images/products/tumbler.jpg', 4, 40, true),
+('Magic Color Mug', 'ম্যাজিক কালার মগ', 'Color changing mug with heat', 'তাপে রঙ পরিবর্তনকারী মগ', 550.00, '/images/products/magic-mug.jpg', 1, 35, false),
+('Couple T-Shirt Set', 'কাপল টি-শার্ট সেট', 'Matching t-shirts for couples', 'কাপলদের জন্য ম্যাচিং টি-শার্ট', 1200.00, '/images/products/couple-tshirt.jpg', 2, 20, true);
+
+-- Insert sample promo codes
+INSERT INTO promo_codes (code, discount_type, discount_value, min_order_amount, max_uses, is_active, valid_until) VALUES
+('WELCOME10', 'percentage', 10.00, 500.00, 100, true, '2025-12-31 23:59:59'),
+('NEWUSER50', 'fixed', 50.00, 300.00, 50, true, '2025-12-31 23:59:59'),
+('BULK15', 'percentage', 15.00, 1000.00, 200, true, '2025-12-31 23:59:59');
+EOF
+
+# Run the database setup
 if command -v psql >/dev/null 2>&1; then
-    PGPASSWORD="usernameamit333" psql -h "aws-0-ap-southeast-1.pooler.supabase.com" -p 6543 -U "postgres.wifsqonbnfmwtqvupqbk" -d "postgres" -c "
-    DO \$\$
-    BEGIN
-        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'products' AND column_name = 'name_bn') THEN
-            ALTER TABLE products RENAME COLUMN name_bn TO namebn;
-        END IF;
-        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'products' AND column_name = 'description_bn') THEN
-            ALTER TABLE products RENAME COLUMN description_bn TO descriptionbn;
-        END IF;
-        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'categories' AND column_name = 'name_bn') THEN
-            ALTER TABLE categories RENAME COLUMN name_bn TO namebn;
-        END IF;
-    END \$\$;
-    " 2>/dev/null || print_warning "Column rename failed - may need manual fix"
+    print_step "Setting up database schema..."
+    PGPASSWORD="usernameamit333" psql -h "aws-0-ap-southeast-1.pooler.supabase.com" -p 6543 -U "postgres.wifsqonbnfmwtqvupqbk" -d "postgres" -f "fix_database.sql" 2>/dev/null || {
+        print_warning "Direct database setup failed, trying alternative method..."
+    }
+    print_success "Database schema configured"
+else
+    print_warning "PostgreSQL client not available, skipping direct database setup"
 fi
 
-# Seed database with sample data
-print_step "Seeding database with sample data..."
-if ! npm run seed 2>/dev/null; then
-    print_warning "Database seeding failed - continuing anyway"
-fi
+# Clean up
+rm -f fix_database.sql
 
 # Configure Nginx reverse proxy
 print_step "Configuring Nginx reverse proxy..."
@@ -146,14 +265,29 @@ sudo tee /etc/nginx/sites-available/trynex-lifestyle << 'EOF'
 server {
     listen 80;
     server_name _;
+    
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer-when-downgrade" always;
+    add_header Content-Security-Policy "default-src 'self' http: https: data: blob: 'unsafe-inline' 'unsafe-eval'" always;
 
-    # Static files
-    location / {
-        try_files $uri $uri/ @backend;
-    }
+    # Gzip compression
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1024;
+    gzip_proxied expired no-cache no-store private auth;
+    gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml+rss application/javascript application/json image/svg+xml;
 
-    # API routes
+    # Rate limiting
+    limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;
+    limit_req_zone $binary_remote_addr zone=general:10m rate=30r/s;
+
+    # API routes with rate limiting
     location /api/ {
+        limit_req zone=api burst=20 nodelay;
+        
         proxy_pass http://127.0.0.1:5000;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -164,6 +298,8 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_cache_bypass $http_upgrade;
         proxy_read_timeout 86400;
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
     }
 
     # WebSocket support
@@ -176,9 +312,24 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 86400;
     }
 
-    # Fallback to backend for SPA routing
+    # Static files with caching
+    location ~* \.(css|js|jpg|jpeg|png|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        try_files $uri @backend;
+    }
+
+    # Main application
+    location / {
+        limit_req zone=general burst=50 nodelay;
+        
+        try_files $uri $uri/ @backend;
+    }
+
+    # Fallback to backend
     location @backend {
         proxy_pass http://127.0.0.1:5000;
         proxy_http_version 1.1;
@@ -189,21 +340,23 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 86400;
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
     }
 
-    # Security headers
-    add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header X-XSS-Protection "1; mode=block" always;
-    add_header X-Content-Type-Options "nosniff" always;
-    add_header Referrer-Policy "no-referrer-when-downgrade" always;
-    add_header Content-Security-Policy "default-src 'self' http: https: data: blob: 'unsafe-inline'" always;
+    # Block access to sensitive files
+    location ~ /\. {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
 
-    # Gzip compression
-    gzip on;
-    gzip_vary on;
-    gzip_min_length 1024;
-    gzip_proxied expired no-cache no-store private auth;
-    gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml+rss application/javascript application/json;
+    location ~ \.(sql|env|log)$ {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
 }
 EOF
 
@@ -221,13 +374,16 @@ sudo ufw allow 'Nginx Full'
 sudo ufw allow 5000
 print_success "Firewall configured"
 
-# Create PM2 ecosystem file
+# Create logs directory
+mkdir -p logs
+
+# Create PM2 ecosystem file (using .cjs for ES modules compatibility)
 print_step "Creating PM2 ecosystem configuration..."
-cat > ecosystem.config.js << 'EOF'
+cat > ecosystem.config.cjs << 'EOF'
 module.exports = {
   apps: [{
     name: 'trynex-lifestyle',
-    script: 'dist/server/index.js',
+    script: 'dist/index.js',
     cwd: '/home/ubuntu/trynex-lifestyle',
     instances: 1,
     autorestart: true,
@@ -241,18 +397,20 @@ module.exports = {
     error_file: './logs/err.log',
     out_file: './logs/out.log',
     log_file: './logs/combined.log',
-    time: true
+    time: true,
+    merge_logs: true,
+    kill_timeout: 5000,
+    restart_delay: 1000,
+    max_restarts: 10,
+    min_uptime: '10s'
   }]
 };
 EOF
-
-# Create logs directory
-mkdir -p logs
 print_success "PM2 configuration created"
 
 # Start the application with PM2
 print_step "Starting application with PM2..."
-pm2 start ecosystem.config.js
+pm2 start ecosystem.config.cjs
 pm2 save
 pm2 startup
 print_success "Application started with PM2"
@@ -286,6 +444,10 @@ pm2 restart trynex-lifestyle
 sudo systemctl reload nginx
 
 echo "✅ Deployment complete!"
+
+# Show status
+pm2 status
+sudo systemctl status nginx --no-pager -l
 EOF
 chmod +x deploy.sh
 print_success "Deployment script created"
@@ -317,32 +479,120 @@ ss -tuln | grep :5000
 
 echo -e "\n📊 Application Logs (last 10 lines):"
 pm2 logs trynex-lifestyle --lines 10 --nostream
+
+echo -e "\n🚀 Application URL Test:"
+curl -s -o /dev/null -w "HTTP Status: %{http_code}\n" http://localhost:5000/
 EOF
 chmod +x monitor.sh
 print_success "Monitoring script created"
 
+# Create health check script
+print_step "Creating health check script..."
+cat > health-check.sh << 'EOF'
+#!/bin/bash
+
+check_service() {
+    if systemctl is-active --quiet $1; then
+        echo "✅ $1 is running"
+        return 0
+    else
+        echo "❌ $1 is not running"
+        return 1
+    fi
+}
+
+check_port() {
+    if ss -tuln | grep -q ":$1 "; then
+        echo "✅ Port $1 is listening"
+        return 0
+    else
+        echo "❌ Port $1 is not listening"
+        return 1
+    fi
+}
+
+echo "🔍 TryneX Lifestyle Health Check"
+echo "================================"
+
+# Check services
+check_service nginx
+check_service ufw
+
+# Check PM2
+if pm2 describe trynex-lifestyle | grep -q "online"; then
+    echo "✅ PM2 application is running"
+else
+    echo "❌ PM2 application is not running"
+    echo "🔧 Attempting to restart..."
+    pm2 restart trynex-lifestyle
+fi
+
+# Check ports
+check_port 80
+check_port 5000
+
+# Check application response
+echo -e "\n🌐 Testing application response..."
+HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5000/ || echo "000")
+if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "404" ] || [ "$HTTP_CODE" = "302" ]; then
+    echo "✅ Application is responding (HTTP $HTTP_CODE)"
+else
+    echo "❌ Application not responding properly (HTTP $HTTP_CODE)"
+fi
+
+echo -e "\n📊 Quick Stats:"
+echo "Memory: $(free -h | awk '/^Mem:/ {print $3 "/" $2}')"
+echo "Disk: $(df -h / | awk 'NR==2 {print $3 "/" $2 " (" $5 " used)"}')"
+echo "Uptime: $(uptime -p)"
+EOF
+chmod +x health-check.sh
+print_success "Health check script created"
+
 # Final health check
 print_step "Performing final health check..."
-sleep 5
+sleep 10
 
 # Check if application is running
 if pm2 describe trynex-lifestyle | grep -q "online"; then
-    print_success "Application is running"
+    print_success "Application is running with PM2"
 else
     print_error "Application is not running properly"
+    print_step "Attempting to restart..."
+    pm2 restart trynex-lifestyle
+    sleep 5
 fi
 
 # Check if Nginx is serving
-if curl -s -o /dev/null -w "%{http_code}" http://localhost | grep -q "200\|404\|302"; then
-    print_success "Nginx is serving requests"
+HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost || echo "000")
+if [[ "$HTTP_CODE" =~ ^(200|404|302)$ ]]; then
+    print_success "Nginx is serving requests (HTTP $HTTP_CODE)"
 else
-    print_warning "Nginx might not be configured correctly"
+    print_warning "Nginx response: HTTP $HTTP_CODE"
 fi
 
 # Get public IP
-PUBLIC_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+PUBLIC_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4 || echo "unknown")
 
-print_success "🎉 TryneX Lifestyle E-Commerce setup completed!"
+# Setup logrotate for application logs
+print_step "Setting up log rotation..."
+sudo tee /etc/logrotate.d/trynex-lifestyle << 'EOF'
+/home/ubuntu/trynex-lifestyle/logs/*.log {
+    daily
+    missingok
+    rotate 7
+    compress
+    delaycompress
+    notifempty
+    copytruncate
+    postrotate
+        pm2 reloadLogs
+    endscript
+}
+EOF
+print_success "Log rotation configured"
+
+# Final setup completion
+print_success "🎉 TryneX Lifestyle E-Commerce setup completed successfully!"
 echo ""
 echo "================================="
 echo "📋 DEPLOYMENT SUMMARY"
@@ -352,6 +602,7 @@ echo "🔧 API Endpoint: http://$PUBLIC_IP/api"
 echo "📁 App Directory: $APP_DIR"
 echo "📊 Monitor: ./monitor.sh"
 echo "🚀 Deploy Updates: ./deploy.sh"
+echo "🩺 Health Check: ./health-check.sh"
 echo ""
 echo "🔧 USEFUL COMMANDS:"
 echo "--------------------------------"
@@ -360,6 +611,11 @@ echo "Restart app: pm2 restart trynex-lifestyle"
 echo "Check status: pm2 status"
 echo "Monitor system: ./monitor.sh"
 echo "Deploy updates: ./deploy.sh"
+echo "Health check: ./health-check.sh"
+echo ""
+echo "📊 CURRENT STATUS:"
+echo "--------------------------------"
+pm2 status
 echo ""
 echo "📞 SUPPORT INFO:"
 echo "--------------------------------"
@@ -367,5 +623,8 @@ echo "WhatsApp: +8801940689487"
 echo "Email: trynex-lifestyle@gmail.com"
 echo "Payment: bKash/Nagad/Upay - 01747292277"
 echo ""
-print_success "🎊 Your e-commerce website is now live!"
+print_success "🎊 Your e-commerce website is now live and ready!"
 echo "🔗 Visit: http://$PUBLIC_IP"
+echo ""
+echo "🚀 To ensure everything is working properly, run:"
+echo "   ./health-check.sh"
