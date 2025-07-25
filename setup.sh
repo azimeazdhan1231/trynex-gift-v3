@@ -115,6 +115,25 @@ if ! npm run db:push 2>/dev/null; then
     print_warning "Database push failed - continuing anyway"
 fi
 
+# Fix column naming after push
+print_step "Fixing column names to match application schema..."
+if command -v psql >/dev/null 2>&1; then
+    PGPASSWORD="usernameamit333" psql -h "aws-0-ap-southeast-1.pooler.supabase.com" -p 6543 -U "postgres.wifsqonbnfmwtqvupqbk" -d "postgres" -c "
+    DO \$\$
+    BEGIN
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'products' AND column_name = 'name_bn') THEN
+            ALTER TABLE products RENAME COLUMN name_bn TO namebn;
+        END IF;
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'products' AND column_name = 'description_bn') THEN
+            ALTER TABLE products RENAME COLUMN description_bn TO descriptionbn;
+        END IF;
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'categories' AND column_name = 'name_bn') THEN
+            ALTER TABLE categories RENAME COLUMN name_bn TO namebn;
+        END IF;
+    END \$\$;
+    " 2>/dev/null || print_warning "Column rename failed - may need manual fix"
+fi
+
 # Seed database with sample data
 print_step "Seeding database with sample data..."
 if ! npm run seed 2>/dev/null; then
@@ -183,7 +202,7 @@ server {
     gzip on;
     gzip_vary on;
     gzip_min_length 1024;
-    gzip_proxied expired no-cache no-store private must-revalidate auth;
+    gzip_proxied expired no-cache no-store private auth;
     gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml+rss application/javascript application/json;
 }
 EOF
