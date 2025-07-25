@@ -49,7 +49,7 @@ print_success "Node.js $(node --version) installed"
 
 # Install additional dependencies
 print_step "Installing additional dependencies..."
-sudo apt install -y git unzip curl wget nginx ufw htop
+sudo apt install -y git unzip curl wget nginx ufw htop postgresql-client
 print_success "Dependencies installed"
 
 # Install PM2 globally for process management
