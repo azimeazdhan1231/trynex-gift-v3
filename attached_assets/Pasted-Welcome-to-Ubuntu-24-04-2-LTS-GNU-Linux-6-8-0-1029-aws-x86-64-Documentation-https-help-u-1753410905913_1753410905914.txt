@@ -1,0 +1,364 @@
+Welcome to Ubuntu 24.04.2 LTS (GNU/Linux 6.8.0-1029-aws x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Fri Jul 25 02:33:21 UTC 2025
+
+  System load:  0.0               Temperature:           -273.1 C
+  Usage of /:   63.2% of 6.71GB   Processes:             112
+  Memory usage: 29%               Users logged in:       0
+  Swap usage:   0%                IPv4 address for ens5: 172.31.37.28
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+*** System restart required ***
+Last login: Fri Jul 25 02:31:51 2025 from 13.48.4.202
+ubuntu@ip-172-31-37-28:~$ 
+#!/bin/bash
+
+# TryneX Lifestyle E-Commerce - AWS EC2 Production Setup Script
+# This script auto-installs, configures, and starts everything on Ubuntu 24.04 LTS
+
+set -e  # Exit on any error
+
+echo "🚀 Starting TryneX Lifestyle E-Commerce Production Setup..."
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+print_step() {
+    echo -e "${BLUE}📋 $1${NC}"
+}
+
+print_success() {
+    echo -e "${GREEN}✅ $1${NC}"
+}
+
+print_warning() {
+    echo -e "${YELLOW}⚠️  $1${NC}"
+}
+
+print_error() {
+    echo -e "${RED}❌ $1${NC}"
+}
+
+# Check if running as root
+if [ "$EUID" -eq 0 ]; then
+    print_error "Please don't run this script as root. Run as ubuntu user."
+    exit 1
+echo "🔗 Visit: http://$PUBLIC_IP"website is now live!"pleted!"blic-ipv4)0\|404\|302"; thencation/xml+r
+🚀 Starting TryneX Lifestyle E-Commerce Production Setup...
+📋 Updating system packages...
+Hit:1 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble InRelease
+Get:2 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]               
+Get:3 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]             
+Hit:4 https://deb.nodesource.com/node_20.x nodistro InRelease                                        
+Get:5 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]                            
+Get:6 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1282 kB]
+Get:7 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-updates/main Translation-en [260 kB]
+Get:8 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 Components [163 kB]
+Get:9 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1113 kB]
+Get:10 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-updates/universe Translation-en [284 kB]
+Get:11 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Components [377 kB]
+Get:12 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Components [212 B]
+Get:13 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Components [940 B]
+Get:14 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-backports/main amd64 Components [7060 B]
+Get:15 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Components [28.3 kB]
+Get:16 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-backports/restricted amd64 Components [216 B]
+Get:17 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Components [212 B]
+Get:18 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [1023 kB]
+Get:19 http://security.ubuntu.com/ubuntu noble-security/main Translation-en [180 kB]
+Get:20 http://security.ubuntu.com/ubuntu noble-security/main amd64 Components [21.5 kB]
+Get:21 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Packages [876 kB]
+Get:22 http://security.ubuntu.com/ubuntu noble-security/universe Translation-en [193 kB]
+Get:23 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Components [52.3 kB]
+Get:24 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Components [212 B]
+Get:25 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 Components [212 B]
+Fetched 6240 kB in 1s (4376 kB/s)                                 
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+5 packages can be upgraded. Run 'apt list --upgradable' to see them.
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Calculating upgrade... Done
+The following upgrades have been deferred due to phasing:
+  openssh-client openssh-server openssh-sftp-server
+The following packages will be upgraded:
+  iputils-ping iputils-tracepath
+2 upgraded, 0 newly installed, 0 to remove and 3 not upgraded.
+2 standard LTS security updates
+Need to get 58.0 kB of archives.
+After this operation, 0 B of additional disk space will be used.
+Get:1 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 iputils-ping amd64 3:20240117-1ubuntu0.1 [44.6 kB]
+Get:2 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 iputils-tracepath amd64 3:20240117-1ubuntu0.1 [13.4 kB]
+Fetched 58.0 kB in 0s (2535 kB/s)           
+(Reading database ... 114827 files and directories currently installed.)
+Preparing to unpack .../iputils-ping_3%3a20240117-1ubuntu0.1_amd64.deb ...
+Unpacking iputils-ping (3:20240117-1ubuntu0.1) over (3:20240117-1build1) ...
+Preparing to unpack .../iputils-tracepath_3%3a20240117-1ubuntu0.1_amd64.deb ...
+Unpacking iputils-tracepath (3:20240117-1ubuntu0.1) over (3:20240117-1build1) ...
+Setting up iputils-ping (3:20240117-1ubuntu0.1) ...
+Setting up iputils-tracepath (3:20240117-1ubuntu0.1) ...
+Processing triggers for man-db (2.12.0-4build2) ...
+Scanning processes...                                                                                 
+Scanning candidates...                                                                                
+Scanning linux images...                                                                              
+
+Pending kernel upgrade!
+Running kernel version:
+  6.8.0-1029-aws
+Diagnostics:
+  The currently running kernel version is not the expected kernel version 6.14.0-1009-aws.
+
+Restarting the system to load the new kernel will not be handled automatically, so you should
+consider rebooting.
+
+Restarting services...
+
+Service restarts being deferred:
+ /etc/needrestart/restart.d/dbus.service
+ systemctl restart getty@tty1.service
+ systemctl restart networkd-dispatcher.service
+ systemctl restart serial-getty@ttyS0.service
+ systemctl restart systemd-logind.service
+ systemctl restart unattended-upgrades.service
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+✅ System updated
+📋 Installing Node.js 20.x LTS...
+2025-07-25 02:33:54 - Installing pre-requisites
+Hit:1 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble InRelease
+Hit:2 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-updates InRelease                        
+Hit:3 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-backports InRelease                      
+Hit:4 https://deb.nodesource.com/node_20.x nodistro InRelease                                        
+Hit:5 http://security.ubuntu.com/ubuntu noble-security InRelease                                     
+Reading package lists... Done
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+apt-transport-https is already the newest version (2.8.3).
+ca-certificates is already the newest version (20240203).
+curl is already the newest version (8.5.0-2ubuntu10.6).
+gnupg is already the newest version (2.4.4-2ubuntu17.3).
+0 upgraded, 0 newly installed, 0 to remove and 3 not upgraded.
+Hit:1 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble InRelease
+Hit:2 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-updates InRelease                        
+Hit:3 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-backports InRelease                      
+Hit:4 http://security.ubuntu.com/ubuntu noble-security InRelease                                     
+Hit:5 https://deb.nodesource.com/node_20.x nodistro InRelease              
+Reading package lists... Done                        
+2025-07-25 02:33:58 - Repository configured successfully.
+2025-07-25 02:33:58 - To install Node.js, run: apt-get install nodejs -y
+2025-07-25 02:33:58 - You can use N|solid Runtime as a node.js alternative
+2025-07-25 02:33:58 - To install N|solid Runtime, run: apt-get install nsolid -y 
+
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+nodejs is already the newest version (20.19.4-1nodesource1).
+0 upgraded, 0 newly installed, 0 to remove and 3 not upgraded.
+✅ Node.js v20.19.4 installed
+📋 Installing additional dependencies...
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+git is already the newest version (1:2.43.0-1ubuntu7.3).
+curl is already the newest version (8.5.0-2ubuntu10.6).
+wget is already the newest version (1.21.4-1ubuntu4.1).
+wget set to manually installed.
+nginx is already the newest version (1.24.0-2ubuntu7.4).
+ufw is already the newest version (0.36.2-6).
+ufw set to manually installed.
+htop is already the newest version (3.3.0-4build1).
+htop set to manually installed.
+Suggested packages:
+  zip
+The following NEW packages will be installed:
+  unzip
+0 upgraded, 1 newly installed, 0 to remove and 3 not upgraded.
+Need to get 174 kB of archives.
+After this operation, 384 kB of additional disk space will be used.
+Get:1 http://eu-north-1.ec2.archive.ubuntu.com/ubuntu noble-updates/main amd64 unzip amd64 6.0-28ubuntu4.1 [174 kB]
+Fetched 174 kB in 0s (6648 kB/s)
+Selecting previously unselected package unzip.
+(Reading database ... 114827 files and directories currently installed.)
+Preparing to unpack .../unzip_6.0-28ubuntu4.1_amd64.deb ...
+Unpacking unzip (6.0-28ubuntu4.1) ...
+Setting up unzip (6.0-28ubuntu4.1) ...
+Processing triggers for man-db (2.12.0-4build2) ...
+Scanning processes...                                                                                 
+Scanning candidates...                                                                                
+Scanning linux images...                                                                              
+
+Pending kernel upgrade!
+Running kernel version:
+  6.8.0-1029-aws
+Diagnostics:
+  The currently running kernel version is not the expected kernel version 6.14.0-1009-aws.
+
+Restarting the system to load the new kernel will not be handled automatically, so you should
+consider rebooting.
+
+Restarting services...
+
+Service restarts being deferred:
+ /etc/needrestart/restart.d/dbus.service
+ systemctl restart getty@tty1.service
+ systemctl restart networkd-dispatcher.service
+ systemctl restart serial-getty@ttyS0.service
+ systemctl restart systemd-logind.service
+ systemctl restart unattended-upgrades.service
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+✅ Dependencies installed
+📋 Installing PM2 process manager...
+
+changed 135 packages in 9s
+
+13 packages are looking for funding
+  run `npm fund` for details
+✅ PM2 installed
+📋 Creating application directory at /home/ubuntu/trynex-lifestyle...
+📋 Creating production environment file...
+✅ Environment file created
+📋 Installing Node.js dependencies...
+npm warn config production Use `--omit=dev` instead.
+
+up to date, audited 639 packages in 2s
+
+75 packages are looking for funding
+  run `npm fund` for details
+
+6 vulnerabilities (1 low, 5 moderate)
+
+To address all issues possible (including breaking changes), run:
+  npm audit fix --force
+
+Some issues need review, and may require choosing
+a different dependency.
+
+Run `npm audit` for details.
+✅ Dependencies installed
+📋 Building the application...
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.19 building for production...
+✓ 1764 modules transformed.
+../dist/public/index.html                   2.09 kB │ gzip:   1.11 kB
+../dist/public/assets/index-Cx7BgEGA.css   74.73 kB │ gzip:  13.04 kB
+../dist/public/assets/index-BhZuE2Xw.js   571.12 kB │ gzip: 164.90 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 7.74s
+
+  dist/index.js  51.8kb
+
+⚡ Done in 25ms
+✅ Application built successfully
+📋 Testing database connection...
+npm error Missing script: "db:migrate"
+npm error
+npm error To see a list of scripts, run:
+npm error   npm run
+npm error A complete log of this run can be found in: /home/ubuntu/.npm/_logs/2025-07-25T02_34_24_798Z-debug-0.log
+⚠️  Database migration failed - continuing anyway
+📋 Seeding database with sample data...
+npm error Missing script: "db:seed"
+npm error
+npm error To see a list of scripts, run:
+npm error   npm run
+npm error A complete log of this run can be found in: /home/ubuntu/.npm/_logs/2025-07-25T02_34_24_944Z-debug-0.log
+⚠️  Database seeding failed - continuing anyway
+📋 Configuring Nginx reverse proxy...
+server {
+    listen 80;
+    server_name _;
+
+    # Static files
+    location / {
+        try_files $uri $uri/ @backend;
+    }
+
+    # API routes
+    location /api/ {
+        proxy_pass http://127.0.0.1:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 86400;
+    }
+
+    # WebSocket support
+    location /ws {
+        proxy_pass http://127.0.0.1:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # Fallback to backend for SPA routing
+    location @backend {
+        proxy_pass http://127.0.0.1:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer-when-downgrade" always;
+    add_header Content-Security-Policy "default-src 'self' http: https: data: blob: 'unsafe-inline'" always;
+
+    # Gzip compression
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1024;
+    gzip_proxied expired no-cache no-store private must-revalidate auth;
+    gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml+rss application/javascript application/json;
+}
+2025/07/25 02:34:25 [emerg] 49926#49926: invalid value "must-revalidate" in /etc/nginx/sites-enabled/trynex-lifestyle:60
+nginx: configuration file /etc/nginx/nginx.conf test failed
