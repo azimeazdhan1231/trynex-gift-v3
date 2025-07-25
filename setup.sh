@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 # TryneX Lifestyle E-Commerce - AWS EC2 Production Setup Script
@@ -100,19 +99,25 @@ print_step "Building the application..."
 npm run build
 print_success "Application built successfully"
 
-# Test database connection
-print_step "Testing database connection..."
-if npm run db:migrate; then
-    print_success "Database connection successful"
-else
-    print_warning "Database migration failed - continuing anyway"
+# Testing database connection and running migrations...
+print_step "Testing database connection and running migrations..."
+
+# Run the column name fix migration
+print_step "Running database migrations..."
+if [ -f "migrations/0006_fix_column_names.sql" ]; then
+    # Try to run the migration directly with psql if available
+    if command -v psql >/dev/null 2>&1; then
+        PGPASSWORD="usernameamit333" psql -h "aws-0-ap-southeast-1.pooler.supabase.com" -p 6543 -U "postgres.wifsqonbnfmwtqvupqbk" -d "postgres" -f "migrations/0006_fix_column_names.sql" 2>/dev/null || print_warning "Direct migration failed"
+    fi
+fi
+
+if ! npm run db:push 2>/dev/null; then
+    print_warning "Database push failed - continuing anyway"
 fi
 
 # Seed database with sample data
 print_step "Seeding database with sample data..."
-if npm run db:seed; then
-    print_success "Database seeded successfully"
-else
+if ! npm run seed 2>/dev/null; then
     print_warning "Database seeding failed - continuing anyway"
 fi
 

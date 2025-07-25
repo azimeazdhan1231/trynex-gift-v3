@@ -5,6 +5,33 @@ import { insertProductSchema, insertCategorySchema, insertOrderSchema, insertCon
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Health check endpoint
+  app.get('/health', (req, res) => {
+    res.json({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development'
+    });
+  });
+
+  // Database health check
+  app.get('/api/health/db', async (req, res) => {
+    try {
+      const products = await storage.getProducts({});
+      res.json({ 
+        status: 'ok', 
+        database: 'connected',
+        productCount: products.length 
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        status: 'error', 
+        database: 'disconnected',
+        error: error.message 
+      });
+    }
+  });
+
   // Products routes
   app.get("/api/products", async (req, res) => {
     try {
