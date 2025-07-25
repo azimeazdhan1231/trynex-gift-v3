@@ -1,0 +1,109 @@
+✅ Step-by-Step Migration Guide (Replit ➜ AWS EC2)
+1. Launch an AWS EC2 Instance
+Go to: AWS EC2 Dashboard
+
+Click Launch Instance
+
+Settings:
+
+Name: Trynex Backend Server
+
+AMI: Ubuntu 24.04 LTS
+
+Instance Type: t2.micro (Free tier) or t3.micro
+
+Key pair: Create/download .pem file
+
+Security group:
+
+Allow 22 (SSH), 5000, and 80/443
+
+2. Connect to Your VPS via SSH
+bash
+Copy code
+ssh -i your-key.pem ubuntu@your-ec2-public-ip
+3. Install Prerequisites on EC2
+bash
+Copy code
+sudo apt update && sudo apt upgrade -y
+sudo apt install nodejs npm git unzip
+(Optional for yarn):
+
+bash
+Copy code
+npm install -g yarn
+4. Upload Your Project to VPS
+Choose one method:
+
+A. Clone from GitHub:
+bash
+Copy code
+git clone https://github.com/yourusername/trynex-backend.git
+cd trynex-backend
+B. Copy from local:
+bash
+Copy code
+scp -i your-key.pem -r ./trynex-backend ubuntu@your-ec2-public-ip:/home/ubuntu/
+5. Setup Environment Variables on VPS
+Create a .env file in your server/ directory:
+
+bash
+Copy code
+cd server/
+nano .env
+Paste this:
+
+env
+Copy code
+DATABASE_URL=postgresql://postgres.wifsqonbnfmwtqvupqbk:usernameamit333@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true
+SUPABASE_URL=https://wifsqonbnfmwtqvupqbk.supabase.co
+SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+NODE_ENV=production
+PORT=5000
+6. Install Dependencies
+From root project folder:
+
+bash
+Copy code
+cd server
+npm install
+Build:
+
+bash
+Copy code
+npm run build
+Run:
+
+bash
+Copy code
+npm start
+(Optional - Use PM2 to keep it alive):
+
+bash
+Copy code
+npm install -g pm2
+pm2 start npm --name trynex-api -- start
+pm2 save
+7. Allow Incoming Requests on EC2 Port
+Make sure your AWS Security Group allows TCP port 5000, or proxy to port 80/443 via Nginx if needed.
+
+8. Test Deployment
+Visit:
+
+bash
+Copy code
+http://your-ec2-public-ip:5000/api
+(Optional) Serve via Nginx + SSL (for production)
+bash
+Copy code
+sudo apt install nginx
+sudo ufw allow 'Nginx Full'
+Configure reverse proxy from port 80 → 5000.
+
+🧪 Final Testing Checklist
+✅ Backend reachable from browser
+✅ Supabase connection working
+✅ Orders, products, and design endpoints working
+✅ Admin panel routes secured and functioning
+✅ Payment system (bKash/Nagad) info displayed
+✅ Bengali thana system loading properly
